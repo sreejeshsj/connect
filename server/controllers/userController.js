@@ -161,62 +161,62 @@ const updateProfilePicture = async (req, res) => {
 };
 
 //follow controller
-const follow = async (req,res)=>{
-  try{
-    const {targetId}=req.body
-    
-    const loggedInUser = await UserModel.findById(req.userId)
-    const targetUser = await UserModel.findById(targetId)
-    
-    if(!loggedInUser.following.includes(targetUser._id)){
-      loggedInUser.following.push(targetUser._id)
+const follow = async (req, res) => {
+  try {
+    const { targetId } = req.body;
+
+    const loggedInUser = await UserModel.findById(req.userId);
+    const targetUser = await UserModel.findById(targetId);
+
+    if (!loggedInUser.following.includes(targetUser._id)) {
+      loggedInUser.following.push(targetUser._id);
     }
-    if(!targetUser.followers.includes(loggedInUser._id)){
-      targetUser.followers.push(loggedInUser._id)
+    if (!targetUser.followers.includes(loggedInUser._id)) {
+      targetUser.followers.push(loggedInUser._id);
     }
 
-   await loggedInUser.save()
-   await targetUser.save()
+    await loggedInUser.save();
+    await targetUser.save();
 
-   res.json({
-    success:true,
-    message:"Followed Successfully"
-   })
-  }catch(error){
-      res.json({
+    res.json({
+      success: true,
+      message: "Followed Successfully",
+    });
+  } catch (error) {
+    res.json({
       success: false,
       message: error.message || "Something went wrong",
     });
   }
-}
+};
 
 //unfollow controller
-const unFollow = async (req,res)=>{
-  try{
-    const {targetId}= req.body
-    const loggedInUser=await UserModel.findById(req.userId)
-    const targetUser = await UserModel.findById(targetId)
-    if(loggedInUser.following.includes(targetUser._id)){
-      loggedInUser.following.pull(targetUser._id)
+const unFollow = async (req, res) => {
+  try {
+    const { targetId } = req.body;
+    const loggedInUser = await UserModel.findById(req.userId);
+    const targetUser = await UserModel.findById(targetId);
+    if (loggedInUser.following.includes(targetUser._id)) {
+      loggedInUser.following.pull(targetUser._id);
     }
-    if(targetUser.followers.includes(loggedInUser._id)){
-      targetUser.followers.pull(loggedInUser._id)
+    if (targetUser.followers.includes(loggedInUser._id)) {
+      targetUser.followers.pull(loggedInUser._id);
     }
 
-   await loggedInUser.save()
-   await targetUser.save()
+    await loggedInUser.save();
+    await targetUser.save();
 
-   res.json({
-    success:true,
-    message:"UnFollowed Successfully"
-   })
-  }catch(error){
-      res.json({
+    res.json({
+      success: true,
+      message: "UnFollowed Successfully",
+    });
+  } catch (error) {
+    res.json({
       success: false,
       message: error.message || "Something went wrong",
     });
   }
-}
+};
 
 export {
   register,
@@ -225,5 +225,5 @@ export {
   updateUserProfile,
   updateProfilePicture,
   follow,
-  unFollow
+  unFollow,
 };
