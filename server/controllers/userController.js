@@ -2,6 +2,8 @@ import bcrypt from "bcrypt";
 import UserModel from "../models/user.js";
 import { v2 as cloudinary } from "cloudinary";
 import createToken from "../utils/token.js";
+
+//user registration
 const register = async (req, res) => {
   try {
     const { name, email, password, bio } = req.body;
@@ -48,6 +50,120 @@ const register = async (req, res) => {
   }
 };
 
-const login = async (req, res) => {};
+//user login
+const login = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    const user = await UserModel.findOne({ email });
 
-export { register, login };
+    if (!user) {
+      return res.json({
+        success: false,
+        message: "User does not exists",
+      });
+    }
+
+    const checkPassword = await bcrypt.compare(password, user.password);
+    if (checkPassword) {
+      return res.json({
+        success: true,
+        message: "Logged in Successfully",
+        token: createToken(user._id),
+      });
+    }
+  } catch (error) {
+    res.json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+//get user based on id
+const getSingleUser = async (req, res) => {
+  try {
+    const user = await UserModel.findById(req.userId);
+    if (user) {
+      res.json({
+        success: true,
+        user,
+      });
+    }
+  } catch (error) {
+    res.json({
+      success: false,
+      message: "jwkej",
+    });
+  }
+};
+
+//update user profile
+const updateUserProfile = async (req, res) => {
+  try {
+    const { name, bio } = req.body;
+    const update = {};
+    if (name !== undefined) {
+      update.name = name;
+    }
+    if (bio !== undefined) {
+      update.bio = bio;
+    }
+
+    const updatedUser = await UserModel.findByIdAndUpdate(
+      req.userId,
+      { $set: update },
+      { new: true }
+    );
+    res.json({
+      success: true,
+      message: "Profile updated successfully",
+      updatedUser,
+    });
+  } catch (error) {
+    res.json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+//update profilePicture
+const updateProfilePicture = async (req, res) => {
+  try {
+    const profilePicture = req.file;
+    console.log(profilePicture);
+    if (!profilePicture) {
+      return res.json({
+        success: false,
+        message: "Please provide image",
+      });
+    }
+    const result = await cloudinary.uploader.upload(profilePicture.path);
+    if (result) {
+      const updatedProfile = await UserModel.findByIdAndUpdate(
+        req.userId,
+        { profilePicture: result.secure_url },
+        { new: true }
+      );
+
+      res.json({
+        success: true,
+        message: "dp updated successfully",
+        updatedProfile,
+      });
+    }
+  } catch (error) {
+    res.json({
+      success: false,
+      message: error.message || "Something went wrong",
+    });
+  }
+};
+
+export {
+  register,
+  login,
+  getSingleUser,
+  updateUserProfile,
+  updateProfilePicture,
+};
