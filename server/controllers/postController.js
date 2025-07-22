@@ -102,4 +102,21 @@ const likeAndDislike = async (req, res) => {
   }
 };
 
-export { createNewPost, editPost, likeAndDislike };
+//delete post 
+const deletePost = async (req,res)=>{
+  try {
+    const {postId}=req.params
+    const post = await PostModel.findByIdAndDelete(postId)
+    res.json({
+      success:true,
+      message:"Post deleted successfully"
+    })
+  } catch (error) {
+    res.json({
+      success: false,
+      message: error.message || "Something wrong while updating the post",
+    });
+  }
+}
+
+export { createNewPost, editPost, likeAndDislike, deletePost };
