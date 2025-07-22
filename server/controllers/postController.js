@@ -1,11 +1,11 @@
 import PostModel from "../models/Posts.js";
 import { v2 as cloudinary } from "cloudinary";
+import UserModel from "../models/user.js";
 
 //create new post
 const createNewPost = async (req, res) => {
   try {
     const { caption } = req.body;
-    console.log(caption);
     const image = req.file;
     if (!image) {
       return res.json({
@@ -74,7 +74,6 @@ const editPost = async (req, res) => {
 const likeAndDislike = async (req, res) => {
   try {
     const { postId } = req.params;
-    console.log(postId)
     const post = await PostModel.findById(postId);
     if (!post) {
       return res.status(404).json({
@@ -119,4 +118,39 @@ const deletePost = async (req,res)=>{
   }
 }
 
-export { createNewPost, editPost, likeAndDislike, deletePost };
+//fetch post of followed users
+const fetchFollowedUserPost=async (req,res)=>{
+  try {
+    const user=await UserModel.findById(req.userId)
+    const followingList=user.following
+    const post=await PostModel.find({userId:{$in:followingList}}).sort({createdAt:-1}).populate("userId","name profilePicture")
+    res.json({
+      success:true,
+      post
+    })
+  } catch (error) {
+    res.json({
+      success: false,
+      message: error.message || "Something wrong while fetching the post",
+    });
+  }
+}
+
+//fetch all post 
+const fetchAll=async (req,res)=>{
+  try {
+    const post = await PostModel.find()
+    res.json({
+      success:true,
+      count:post.length,
+      post
+    })
+  } catch (error) {
+    res.json({
+      success: false,
+      message: error.message || "Something wrong while fetching  the all post",
+    });
+  }
+}
+
+export { createNewPost, editPost, likeAndDislike, deletePost, fetchFollowedUserPost, fetchAll };
