@@ -5,6 +5,8 @@ import {
   getSingleUser,
   updateUserProfile,
   updateProfilePicture,
+  follow,
+  unFollow
 } from "../controllers/userController.js";
 import upload from "../config/multer.js";
 import userAuth from "../middlewares/userAuth.js";
@@ -21,4 +23,7 @@ router.post(
   upload.single("profilePicture"),
   updateProfilePicture
 );
+
+router.post('/follow',userAuth,follow)
+router.post('/unfollow',userAuth,unFollow)
 export default router;
