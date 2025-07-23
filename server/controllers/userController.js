@@ -86,7 +86,7 @@ const getSingleUser = async (req, res) => {
     if (user) {
       res.json({
         success: true,
-        user,
+        user
       });
     }
   } catch (error) {

@@ -1,35 +1,79 @@
-import React from 'react'
+
+import { useContext, useEffect, useState } from 'react'
 import PostCard from '../components/PostCard'
+import { AppContext } from '../context/AppContext'
+import axios from 'axios'
 
 function Profile() {
-  return (
+  const {backendUrl,token}=useContext(AppContext)
+  const [posts,setPosts]=useState([])
+  const [user,setUser]=useState({
+    name: '',
+  profilePicture: '',
+  bio: '',
+  followers: [],
+  following: []
+  })
+  const getUserDetails = async ()=>{
+    try {
+      const response = await axios.get(`${backendUrl}/api/user/getuser`,{headers:{token}})
+      if(response.data.success){
+        setUser(response.data.user)
+      }
+      
+    } catch (error) {
+      console.log("error",error.message)
+    }
+  }
+
+  const getUserPosts=async ()=>{
+    try {
+      const response= await axios.get(`${backendUrl}/api/post/fetch-user-post`,{headers:{token}})
+      if(response.data.success){
+        setPosts(response.data.post)
+      }
+    } catch (error) {
+      console.log("error")
+    }
+  }
+  useEffect(()=>{
+    if(token){
+      getUserDetails()
+      getUserPosts()
+    }
+    
+  },[token])
+
+  useEffect(()=>{
+   console.log(posts)
+  },[token])
+  
+  return  (
     <div className='flex flex-col items-center justify-center w-full gap-4'>
-      <div className='flex gap-4'>
+     {user &&  <div className='flex gap-4'>
          <div >
-            <img className='w-28 h-28 rounded-full m-2' src="https://wallpapers.com/images/hd/xbox-360-profile-pictures-c7gtmke9tkgivobl.jpg" alt="" />
+            <img className='w-28 h-28 rounded-full m-2' src={user.profilePicture} alt="" />
          </div>
          <div>
             <div className='flex gap-2 justify-start '>
-                <p className='m-2 mt-5 font-bold'>User1</p>
+                <p className='m-2 mt-5 font-bold'>{user.name}</p>
                 <button  className='m-2 mt-5 text-white bg-black px-4 py-1 rounded-lg'>Edit</button>
                 </div>
             <div className='flex gap-2 justify-end '>
                 <p className='m-2 mt-5 font-bold'>Posts</p>
-                <p className='m-2 mt-5 font-bold'>Followers</p>
-                <p className='m-2 mt-5 font-bold'>Following</p>
+                <p className='m-2 mt-5 font-bold'>Followers {user.followers?.length || 0}</p>
+                <p className='m-2 mt-5 font-bold'>Following {user.following?.length || 0}</p>
                 </div>
             <div className='flex gap-2 justify-start '>
-                <p className='m-2 mt-5 text-sm'>Fail and Master the Development</p>
+                <p className='m-2 mt-5 text-sm'>{user.bio}</p>
                 </div>
             <div></div>
          </div>
-      </div>
+      </div>} 
       <div className='grid grid-cols-2 md:grid-cols-3 gap-4 w-full m-2'>
-  <PostCard/>
-   <PostCard/>
-    <PostCard/> <PostCard/> <PostCard/> <PostCard/>
-   <PostCard/>
-    <PostCard/>
+  {
+    posts && posts.map((post,index )=>(<PostCard key={index} image={post.image} />)) 
+  }
 </div>
 
     </div>
@@ -37,3 +81,5 @@ function Profile() {
 }
 
 export default Profile
+
+//https://wallpapers.com/images/hd/xbox-360-profile-pictures-c7gtmke9tkgivobl.jpg

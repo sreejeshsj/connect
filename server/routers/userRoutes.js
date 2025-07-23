@@ -15,7 +15,7 @@ const router = express.Router();
 
 router.post("/register", upload.single("profilePicture"), register);
 router.post("/login", login);
-router.post("/getuser", userAuth, getSingleUser);
+router.get("/getuser", userAuth, getSingleUser);
 router.post("/update", userAuth, updateUserProfile);
 router.post(
   "/update-dp",
