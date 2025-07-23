@@ -1,31 +1,34 @@
-import {Routes,Route} from 'react-router-dom'
-import Home from './pages/Home';
-import Sidebar from './components/Sidebar'
+import { Routes, Route, Navigate } from "react-router-dom";
+import { useContext } from "react";
+import { AppContext } from "./context/AppContext";
 
-import HomeFeed from './components/HomeFeed';
-import Navbar from './components/Navbar';
-import Profile from './pages/Profile';
+
+import Register from "./components/Register";
+import Login from "./components/Login";
+import MainLayout from "./components/MainLayout";
+
 function App() {
+  const { token } = useContext(AppContext);
+
   return (
-    <div className="flex flex-col h-screen">
-      <Navbar />
-
-      <div className="flex flex-1 overflow-hidden">
-        <Sidebar />
-
-        <div className="flex-1 overflow-y-auto">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/sidebar" element={<Sidebar />} />
-            <Route path="/home-feed" element={<HomeFeed />} />
-            <Route path="/profile" element={<Profile />} />
-          </Routes>
-        </div>
-      </div>
+    <Routes>
+      
+      <Route path="/login" element={token ? <Navigate to="/" /> : <Login />} />
+      <Route path="/register" element={token ? <Navigate to="/" /> : <Register />} />
 
       
-    </div>
+      <Route
+        path="/*"
+        element={
+          token ? (
+            <MainLayout />
+          ) : (
+            <Navigate to="/login" />
+          )
+        }
+      />
+    </Routes>
   );
 }
 
-export default App
+export default App;
