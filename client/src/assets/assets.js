@@ -1,8 +1,9 @@
-import upload_icon from './upload_area.svg'
+import upload_icon from "./upload_area.svg";
+import send_icon from "./send_icon.jpg";
 
+const assets = {
+  upload_icon,
+  send_icon,
+};
 
-const assets={
-    upload_icon
-}
-
-export default assets
+export default assets;

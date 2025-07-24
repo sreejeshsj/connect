@@ -4,7 +4,8 @@ import Sidebar from "./Sidebar";
 import Home from "../pages/Home";
 import Profile from "../pages/Profile";
 import HomeFeed from "./HomeFeed";
-
+import Comment from "./Comment";
+import Post from "./Post";
 function MainLayout() {
   return (
     <div className="flex flex-col h-screen">
@@ -16,6 +17,8 @@ function MainLayout() {
             <Route path="/" element={<Home />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/home-feed" element={<HomeFeed />} />
+            <Route path="/comment" element={<Comment />} />
+            <Route path="/post" element={<Post />} />
           </Routes>
         </div>
       </div>

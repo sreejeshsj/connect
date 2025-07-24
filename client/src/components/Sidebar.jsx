@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import { Home,Plus, PencilLine, User, Mail, LogOut, Info } from "lucide-react";
+import { Home, Plus, User, Mail, LogOut, Info } from "lucide-react";
 
 function Sidebar() {
   return (

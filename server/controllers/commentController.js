@@ -44,6 +44,25 @@ const addComment=async (req,res)=>{
  }
 }
 
+//fetch all comment of a particular post
+const fetchAllComment=async (req,res)=>{
+    try {
+        const {postId} = req.body
+        const comment= await CommentModel.find({postId}).sort({createdAt:-1}).populate("userId","name profilePicture").populate("postId","caption image")
+
+        res.json({
+            success:true,
+            comment
+        })
+    } catch (error) {
+        res.json({
+      success: false,
+      message: error.message || "Something wrong while fetching comment",
+    });
+    }
+}
+
 export {
-    addComment
+    addComment,
+    fetchAllComment
 }

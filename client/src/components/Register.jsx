@@ -27,7 +27,7 @@ const Register = () => {
         if (response.data.success) {
           localStorage.setItem("token", response.data.token);
           toast.success(response.data.message);
-          navigate('/')
+          navigate("/");
         } else {
           toast.error(response.data.message);
         }
