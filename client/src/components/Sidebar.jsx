@@ -30,7 +30,7 @@ function Sidebar() {
             <Info size={20} />
             <span>About</span>
           </NavLink>
-          <NavLink to="/logout" className="flex items-center gap-2">
+          <NavLink onClick={()=>localStorage.removeItem('token')} to="/logout" className="flex items-center gap-2">
             <LogOut size={20} />
             <span>Logout</span>
           </NavLink>

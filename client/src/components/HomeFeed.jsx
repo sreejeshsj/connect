@@ -4,20 +4,9 @@ import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../context/AppContext";
 import axios from "axios";
 function HomeFeed() {
-  const { backendUrl, token } = useContext(AppContext);
-  const [fetchedPost, setFetchedPost] = useState([]);
-  const fetchPost = async () => {
-    try {
-      const response = await axios.get(`${backendUrl}/api/post/fetch`, {
-        headers: { token },
-      });
-      if (response.data.success) {
-        setFetchedPost(response.data.post);
-      }
-    } catch (error) {
-      console.log("Error", error.message);
-    }
-  };
+  const { backendUrl, token,fetchPost,fetchedPost, setFetchedPost } = useContext(AppContext);
+  
+  
   useEffect(() => {
     if (token) {
       fetchPost();
@@ -34,6 +23,7 @@ function HomeFeed() {
               caption={post.caption}
               image={post.image}
               name={post.userId.name}
+              like={post.like?.length}
               dp={post.userId.profilePicture}
             />
           ))

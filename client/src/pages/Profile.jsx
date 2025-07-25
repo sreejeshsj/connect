@@ -5,7 +5,7 @@ import axios from "axios";
 import UserPost from "../components/UserPost";
 
 function Profile() {
-  const { backendUrl, token } = useContext(AppContext);
+  const { backendUrl, token, setImage, setPostId } = useContext(AppContext);
   const [posts, setPosts] = useState([]);
   const [user, setUser] = useState({
     name: "",
@@ -59,7 +59,7 @@ function Profile() {
             <img
               className="w-28 h-28 rounded-full m-2"
               src={user.profilePicture}
-              alt=""
+              
             />
           </div>
           <div>
@@ -88,7 +88,11 @@ function Profile() {
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4 w-full m-2">
         {posts &&
           posts.map((post, index) => (
-            <UserPost key={index} image={post.image} />
+            <UserPost
+              key={index}
+              image={post.image}
+              postId={post._id}
+            />
           ))}
       </div>
     </div>
