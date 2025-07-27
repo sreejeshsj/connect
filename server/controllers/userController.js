@@ -218,6 +218,27 @@ const unFollow = async (req, res) => {
   }
 };
 
+//get all following users
+const getAllfollowingUser = async (req,res)=>{
+  try {
+    const user= await UserModel.findById(req.userId)
+    const followingList=user.following
+
+    const followingUserlist= await UserModel.find({_id:{
+        $in:followingList
+    }})
+   res.json({
+    success:true,
+    followingUserlist
+   })
+  } catch (error) {
+     res.json({
+      success: false,
+      message: error.message || "Something went wrong",
+    });
+  }
+}
+
 export {
   register,
   login,
@@ -226,4 +247,5 @@ export {
   updateProfilePicture,
   follow,
   unFollow,
+  getAllfollowingUser
 };

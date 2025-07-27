@@ -8,7 +8,7 @@ const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [image, setImage] = useState(false);
-  const { backendUrl, navigate } = useContext(AppContext);
+  const { backendUrl, navigate,setToken } = useContext(AppContext);
   const formData = new FormData();
   formData.append("name", name);
   formData.append("email", email);
@@ -26,6 +26,7 @@ const Register = () => {
         );
         if (response.data.success) {
           localStorage.setItem("token", response.data.token);
+           setToken(response.data.token)
           toast.success(response.data.message);
           navigate("/");
         } else {

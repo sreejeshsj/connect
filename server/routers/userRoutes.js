@@ -7,6 +7,7 @@ import {
   updateProfilePicture,
   follow,
   unFollow,
+  getAllfollowingUser,
 } from "../controllers/userController.js";
 import upload from "../config/multer.js";
 import userAuth from "../middlewares/userAuth.js";
@@ -26,4 +27,5 @@ router.post(
 
 router.post("/follow", userAuth, follow);
 router.post("/unfollow", userAuth, unFollow);
+router.get('/get-following-user',userAuth,getAllfollowingUser)
 export default router;

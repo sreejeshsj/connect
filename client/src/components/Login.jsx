@@ -4,7 +4,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 const Login = () => {
-  const { navigate, backendUrl } = useContext(AppContext);
+  const { navigate, backendUrl,setToken } = useContext(AppContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const onSubmitHandler = async (e) => {
@@ -17,6 +17,7 @@ const Login = () => {
 
       if (response.data.success) {
         localStorage.setItem("token", response.data.token);
+        setToken(response.data.token)
         toast.success(response.data.message);
         navigate('/')
       } else {

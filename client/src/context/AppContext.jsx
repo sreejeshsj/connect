@@ -5,12 +5,46 @@ export const AppContext = createContext();
 
 export const AppContextProvider = (props) => {
   const [likedPosts, setLikedPosts] = useState({});
+  const [followingUser,setFollowingUser] = useState([])
   const [postId, setPostId] = useState("");
   const [image, setImage] = useState("");
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
-  const token = localStorage.getItem("token");
+  const [token,setToken] =useState(localStorage.getItem("token")) ;
   const [fetchedPost, setFetchedPost] = useState([]);
   const navigate = useNavigate();
+  const [comment, setComment] = useState("");
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const [message, setMessage] = useState("");
+  const [user, setUser] = useState({
+    name: "",
+    profilePicture: "",
+    bio: "",
+    followers: [],
+    following: [],
+  });
+   const getUserDetails = async () => {
+    try {
+      const response = await axios.get(`${backendUrl}/api/user/getuser`, {
+        headers: { token },
+      });
+      if (response.data.success) {
+        setUser(response.data.user);
+      }
+    } catch (error) {
+      console.log("error", error.message);
+    }
+  };
+
+  const getAlFollowingUser = async ()=>{
+    try {
+        const response = await axios.get(`${backendUrl}/api/user/get-following-user`,{headers:{token}})
+        if(response.data.success){
+          setFollowingUser(response.data.followingUserlist)
+        }
+    } catch (error) {
+      console.log("error")
+    }
+  }
  const fetchPost = async () => {
      try {
        const response = await axios.get(`${backendUrl}/api/post/fetch`, {
@@ -36,11 +70,15 @@ export const AppContextProvider = (props) => {
     }
   }
 
-  
-  const value = {
+   const handleEmojiClick = (emojidata) => {
+    setComment((prev) => prev + emojidata.emoji);
+    setMessage((prev)=> prev + emojidata.emoji)
+  };
+  const value = { 
     backendUrl,
     navigate,
     token,
+    setToken,
     setPostId,
     postId,
     image,
@@ -49,7 +87,15 @@ export const AppContextProvider = (props) => {
     fetchPost,
     fetchedPost, 
     setFetchedPost,
-    likedPosts
+    likedPosts,
+    getUserDetails,
+    user, setUser,
+    getAlFollowingUser,
+    followingUser,
+     handleEmojiClick,
+    comment, setComment,
+    showEmojiPicker, setShowEmojiPicker,
+    message, setMessage
   };
 
   return (

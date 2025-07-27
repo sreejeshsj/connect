@@ -6,10 +6,9 @@ import assets from "../assets/assets";
 import EmojiPicker from "emoji-picker-react";
 
 function Comment() {
-  const { postId, backendUrl, token, image } = useContext(AppContext);
+  const { postId, backendUrl, token, image,handleEmojiClick,comment, setComment,showEmojiPicker, setShowEmojiPicker, } = useContext(AppContext);
   const [comments, setComments] = useState([]);
-  const [comment, setComment] = useState("");
-  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  
   const getComments = async () => {
     try {
       const response = await axios.post(
@@ -26,9 +25,7 @@ function Comment() {
     }
   };
 
-  const handleEmojiClick = (emojidata) => {
-    setComment((prev) => prev + emojidata.emoji);
-  };
+  
 
   const addComment = async () => {
     try {
@@ -48,6 +45,7 @@ function Comment() {
   useEffect(() => {
     if (postId) {
       getComments();
+      
     }
   }, [token, postId]);
 

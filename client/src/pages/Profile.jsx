@@ -1,31 +1,13 @@
 import { useContext, useEffect, useState } from "react";
-import PostCard from "../components/PostCard";
 import { AppContext } from "../context/AppContext";
 import axios from "axios";
 import UserPost from "../components/UserPost";
 
 function Profile() {
-  const { backendUrl, token, setImage, setPostId } = useContext(AppContext);
+  const { backendUrl, token, setImage, setPostId,getUserDetails,user,getAlFollowingUser } = useContext(AppContext);
   const [posts, setPosts] = useState([]);
-  const [user, setUser] = useState({
-    name: "",
-    profilePicture: "",
-    bio: "",
-    followers: [],
-    following: [],
-  });
-  const getUserDetails = async () => {
-    try {
-      const response = await axios.get(`${backendUrl}/api/user/getuser`, {
-        headers: { token },
-      });
-      if (response.data.success) {
-        setUser(response.data.user);
-      }
-    } catch (error) {
-      console.log("error", error.message);
-    }
-  };
+  
+ 
 
   const getUserPosts = async () => {
     try {
@@ -44,12 +26,13 @@ function Profile() {
     if (token) {
       getUserDetails();
       getUserPosts();
+      getAlFollowingUser()
     }
   }, [token]);
-
-  useEffect(() => {
-    console.log(posts);
-  }, [token]);
+useEffect(()=>{
+  console.log(user)
+},[token])
+  
 
   return (
     <div className="flex flex-col items-center justify-center w-full gap-4">
