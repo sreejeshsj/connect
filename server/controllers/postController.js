@@ -170,4 +170,22 @@ const fetchLoggedInUserPost = async (req,res)=>{
   }
 }
 
-export { createNewPost, editPost, likeAndDislike, deletePost, fetchFollowedUserPost, fetchAll, fetchLoggedInUserPost };
+//fetch specific user posts with user details
+const fetchSpecificUser = async (req,res)=>{
+
+  try {
+    const {userId}=req.body
+    const data=await PostModel.find({userId}).populate('userId',"-email -password")
+    res.json({
+      success:true,
+      userData:data
+    })
+  } catch (error) {
+    res.json({
+      success: false,
+      message: error.message || "Something wrong while fetching  user post",
+    });
+  }
+}
+
+export { createNewPost, editPost, likeAndDislike, deletePost, fetchFollowedUserPost, fetchAll, fetchLoggedInUserPost,fetchSpecificUser };

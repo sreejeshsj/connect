@@ -18,6 +18,7 @@ function HomeFeed() {
       {fetchedPost.length > 0
         ? fetchedPost.map((post, index) => (
             <PostCard
+              userId={post.userId._id}
               key={index}
               postId={post._id}
               caption={post.caption}

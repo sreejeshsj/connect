@@ -7,6 +7,9 @@ import HomeFeed from "./HomeFeed";
 import Comment from "./Comment";
 import Post from "./Post";
 import Messages from '../components/Messages'
+import UserProfile from "../pages/UserProfile";
+import SearchFeed from "./SearchFeed";
+
 function MainLayout() {
   return (
     <div className="flex flex-col h-screen">
@@ -21,6 +24,8 @@ function MainLayout() {
             <Route path="/comment" element={<Comment />} />
             <Route path="/post" element={<Post />} />
             <Route path="/messages" element={<Messages/>} />
+            <Route path="/user-profile" element={<UserProfile/>} />
+            <Route path="/search" element={<SearchFeed/>} />
           </Routes>
         </div>
       </div>

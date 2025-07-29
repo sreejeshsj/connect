@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 export const AppContext = createContext();
 
 export const AppContextProvider = (props) => {
+  const [userId,setUserId]=useState('')
   const [likedPosts, setLikedPosts] = useState({});
   const [followingUser,setFollowingUser] = useState([])
   const [postId, setPostId] = useState("");
@@ -95,7 +96,8 @@ export const AppContextProvider = (props) => {
      handleEmojiClick,
     comment, setComment,
     showEmojiPicker, setShowEmojiPicker,
-    message, setMessage
+    message, setMessage,
+    userId,setUserId
   };
 
   return (

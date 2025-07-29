@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import { Home, Plus, User, Mail, LogOut, Info } from "lucide-react";
+import { Home, Plus, User, Mail, LogOut, Info,Search } from "lucide-react";
 
 function Sidebar() {
   return (
@@ -10,6 +10,10 @@ function Sidebar() {
           <NavLink to="/" className="flex items-center gap-2">
             <Home size={20} />
             <span>Home</span>
+          </NavLink>
+          <NavLink to="/search" className="flex items-center gap-2">
+            <Search size={20} />
+            <span>Search</span>
           </NavLink>
           <NavLink to="/post" className="flex items-center gap-2">
             <Plus size={20} />
@@ -41,6 +45,9 @@ function Sidebar() {
       <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white shadow-md flex justify-around items-center py-2 border-t">
         <NavLink to="/">
           <Home size={22} />
+        </NavLink>
+        <NavLink to="/search">
+          <Search size={22} />
         </NavLink>
         <NavLink to="/post">
           <Plus size={22} />

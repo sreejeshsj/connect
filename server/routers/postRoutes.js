@@ -7,6 +7,7 @@ import {
   fetchAll,
   fetchFollowedUserPost,
   fetchLoggedInUserPost,
+  fetchSpecificUser,
   likeAndDislike,
 } from "../controllers/postController.js";
 import upload from "../config/multer.js";
@@ -19,4 +20,5 @@ router.post("/likeToggle/:postId", userAuth, likeAndDislike),
   router.get("/fetch", userAuth, fetchFollowedUserPost),
   router.get("/fetch-all", userAuth, fetchAll),
   router.get("/fetch-user-post", userAuth, fetchLoggedInUserPost);
+router.post('/get-user-profile',userAuth,fetchSpecificUser)
 export default router;
