@@ -1,4 +1,4 @@
-import HomeFeed from '../components/HomeFeed'
+import HomeFeed from "../components/HomeFeed";
 function Home() {
   return (
     <div className="p-4">
@@ -7,4 +7,4 @@ function Home() {
   );
 }
 
-export default Home
+export default Home;

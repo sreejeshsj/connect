@@ -5,67 +5,79 @@ import EmojiPicker from "emoji-picker-react";
 import socket from "../socket";
 import axios from "axios";
 function Messages() {
-  const {backendUrl,getAlFollowingUser,token,followingUser,user,getUserDetails,handleEmojiClick,showEmojiPicker, setShowEmojiPicker,message, setMessage}=useContext(AppContext)
-  const [visible,setVisible]=useState(false)
-  
+  const {
+    backendUrl,
+    getAlFollowingUser,
+    token,
+    followingUser,
+    user,
+    getUserDetails,
+    handleEmojiClick,
+    showEmojiPicker,
+    setShowEmojiPicker,
+    message,
+    setMessage,
+  } = useContext(AppContext);
+  const [visible, setVisible] = useState(false);
+
   const [messages, setMessages] = useState([]);
-  const [receiver,setReceiver] = useState('')
+  const [receiver, setReceiver] = useState("");
 
-  const sendMessage=async()=>{
-
-    if(message.trim()){
-      socket.emit('sendMessage',{
-      sender:user._id,
-      receiver:receiver,
-      message:message
-    })
+  const sendMessage = async () => {
+    if (message.trim()) {
+      socket.emit("sendMessage", {
+        sender: user._id,
+        receiver: receiver,
+        message: message,
+      });
     }
-   setMessages((prev) => [
-        ...prev,
-        { sender: user._id, receiver: receiver, message },
-      ]);
-      setMessage("");
-  }
-  useEffect(()=>{
-       if(user._id){
-        socket.emit('join',user._id)
-       }
-      
+    setMessages((prev) => [
+      ...prev,
+      { sender: user._id, receiver: receiver, message },
+    ]);
+    setMessage("");
+  };
+  useEffect(() => {
+    if (user._id) {
+      socket.emit("join", user._id);
+    }
 
-      socket.on('receiveMessage',(msg)=>{
-        setMessages(prev=>[...prev,msg])
-      })
+    socket.on("receiveMessage", (msg) => {
+      setMessages((prev) => [...prev, msg]);
+    });
 
-       return () => {
+    return () => {
       socket.off("receiveMessage");
     };
-  },[user._id])
+  }, [user._id]);
 
-  useEffect(()=>{
-    const fetchMessage= async ()=>{
+  useEffect(() => {
+    const fetchMessage = async () => {
       try {
-        if(user._id && receiver){
-          const response = await axios.post(`${backendUrl}/api/chat/message`,{
-          sender:user._id,
-          receiver:receiver
-        },{headers:{token}})
-        setMessages(response.data.message)
+        if (user._id && receiver) {
+          const response = await axios.post(
+            `${backendUrl}/api/chat/message`,
+            {
+              sender: user._id,
+              receiver: receiver,
+            },
+            { headers: { token } }
+          );
+          setMessages(response.data.message);
         }
-        
       } catch (error) {
-        console.log("Error",error.message)
+        console.log("Error", error.message);
       }
-    }
-    fetchMessage()  
-  },[user._id,receiver])
+    };
+    fetchMessage();
+  }, [user._id, receiver]);
 
-  useEffect(()=>{
-    if(token){
+  useEffect(() => {
+    if (token) {
       getUserDetails();
-      getAlFollowingUser()
-     
+      getAlFollowingUser();
     }
-  },[])
+  }, []);
   return (
     <div className="flex h-screen">
       <div
@@ -74,7 +86,7 @@ function Messages() {
         } sm:w-[40%] flex flex-col border-r border-gray-300`}
       >
         <div className="p-4 flex flex-col items-center gap-4">
-          <div  className="h-10 flex items-center justify-center w-full font-semibold">
+          <div className="h-10 flex items-center justify-center w-full font-semibold">
             {user.name}
           </div>
 
@@ -99,10 +111,14 @@ function Messages() {
                   src={user.profilePicture}
                   alt="user avatar"
                 />
-                <p onClick={() => {
-                  setVisible(true)
-                  setReceiver(user._id)
-                  }}>{user.name}</p>
+                <p
+                  onClick={() => {
+                    setVisible(true);
+                    setReceiver(user._id);
+                  }}
+                >
+                  {user.name}
+                </p>
               </div>
             ))}
           </div>
@@ -115,15 +131,19 @@ function Messages() {
         } h-[90%] flex sm:block sm:w-[60%] p-4 overflow-y-auto scrollbar-hide`}
       >
         <div className="flex-1 overflow-y-auto scrollbar-hide">
-          {messages && messages.map((msg,index)=>(
-            <p key={index}> <b>{msg.sender === user._id ? "You" : "Them"}:</b> {msg.message}</p>
-          ))}
+          {messages &&
+            messages.map((msg, index) => (
+              <p key={index}>
+                {" "}
+                <b>{msg.sender === user._id ? "You" : "Them"}:</b> {msg.message}
+              </p>
+            ))}
         </div>
 
         {/* Sticky input box at the bottom */}
         <div className="sticky flex  gap-2 w-full bottom-0 bg-white mt-2">
           <input
-            onChange={(e)=>setMessage(e.target.value)}
+            onChange={(e) => setMessage(e.target.value)}
             type="text"
             value={message}
             className="w-full border border-gray-400 p-2 rounded"

@@ -12,7 +12,6 @@ import {
 import upload from "../config/multer.js";
 import userAuth from "../middlewares/userAuth.js";
 
-
 const router = express.Router();
 
 router.post("/register", upload.single("profilePicture"), register);
@@ -28,6 +27,6 @@ router.post(
 
 router.post("/follow", userAuth, follow);
 router.post("/unfollow", userAuth, unFollow);
-router.get('/get-following-user',userAuth,getAllfollowingUser)
+router.get("/get-following-user", userAuth, getAllfollowingUser);
 
 export default router;

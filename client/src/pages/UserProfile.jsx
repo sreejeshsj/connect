@@ -1,18 +1,31 @@
-import axios from 'axios';
-import { useState, useContext, useEffect } from 'react';
-import { AppContext } from '../context/AppContext';
+import axios from "axios";
+import { useState, useContext, useEffect } from "react";
+import { AppContext } from "../context/AppContext";
 import UserPost from "../components/UserPost";
 
 function UserProfile() {
-  const {  token, userId, user, getUserDetails ,userDetails,fetchUserDetails} = useContext(AppContext);
-  
+  const {
+    backendUrl,
+    token,
+    userId,
+    user,
+    getUserDetails,
+    userDetails,
+    fetchUserDetails,
+  } = useContext(AppContext);
+
   const [userProfile, setUserProfile] = useState(null);
   const [followCheck, setFollowCheck] = useState(false);
 
-   
+  useEffect(() => {
+    const userId = localStorage.getItem("selectedUserId");
+    if (userId) {
+      fetchUserDetails(userId);
+    }
+  }, []);
   useEffect(() => {
     if (token) {
-      fetchUserDetails();
+      fetchUserDetails(userId);
       getUserDetails();
     }
   }, [token, userId]);
@@ -25,15 +38,51 @@ function UserProfile() {
 
   const handleFollowCheck = () => {
     if (user.following.includes(userProfile?.userId?._id)) {
-      setFollowCheck(true);
+      return setFollowCheck(true);
+    }
+    return setFollowCheck(false);
+  };
+  const followHandler = async (id) => {
+    try {
+      const response = await axios.post(
+        `${backendUrl}/api/user/follow`,
+        { targetId: id },
+        { headers: { token } }
+      );
+      if (response.data.success) {
+        fetchUserDetails(localStorage.getItem("selectedUserId"));
+        getUserDetails();
+        handleFollowCheck();
+      }
+    } catch (error) {
+      console.log("Error");
     }
   };
-
+  const unFollowHandler = async (id) => {
+    try {
+      const response = await axios.post(
+        `${backendUrl}/api/user/unfollow`,
+        { targetId: id },
+        { headers: { token } }
+      );
+      if (response.data.success) {
+        fetchUserDetails(localStorage.getItem("selectedUserId"));
+        getUserDetails();
+        handleFollowCheck();
+      }
+    } catch (error) {
+      console.log("Error");
+    }
+  };
   useEffect(() => {
     if (userProfile) {
       handleFollowCheck();
     }
   }, [userProfile]);
+
+  useEffect(() => {
+    console.log(userDetails);
+  }, []);
 
   return (
     <div className="flex flex-col items-center justify-center w-full gap-4 p-4">
@@ -54,9 +103,21 @@ function UserProfile() {
               <p className="text-lg font-bold">{userProfile?.userId?.name}</p>
               <div className="flex gap-2">
                 <button className="text-white bg-blue-600 px-4 py-1 rounded-lg">
-                  {followCheck ? 'Unfollow' : 'Follow'}
+                  {followCheck ? (
+                    <p
+                      onClick={() => unFollowHandler(userProfile?.userId?._id)}
+                    >
+                      Unfollow
+                    </p>
+                  ) : (
+                    <p onClick={() => followHandler(userProfile?.userId?._id)}>
+                      Follow
+                    </p>
+                  )}
                 </button>
-                <button className="text-white bg-blue-600 px-4 py-1 rounded-lg">Message</button>
+                <button className="text-white bg-blue-600 px-4 py-1 rounded-lg">
+                  Message
+                </button>
               </div>
             </div>
 

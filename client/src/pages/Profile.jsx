@@ -4,10 +4,16 @@ import axios from "axios";
 import UserPost from "../components/UserPost";
 
 function Profile() {
-  const { backendUrl, token, setImage, setPostId,getUserDetails,user,getAlFollowingUser } = useContext(AppContext);
+  const {
+    backendUrl,
+    token,
+    setImage,
+    setPostId,
+    getUserDetails,
+    user,
+    getAlFollowingUser,
+  } = useContext(AppContext);
   const [posts, setPosts] = useState([]);
-  
- 
 
   const getUserPosts = async () => {
     try {
@@ -26,13 +32,12 @@ function Profile() {
     if (token) {
       getUserDetails();
       getUserPosts();
-      getAlFollowingUser()
+      getAlFollowingUser();
     }
   }, [token]);
-useEffect(()=>{
-  console.log(user)
-},[token])
-  
+  useEffect(() => {
+    console.log(user);
+  }, [token]);
 
   return (
     <div className="flex flex-col items-center justify-center w-full gap-4">
@@ -42,7 +47,6 @@ useEffect(()=>{
             <img
               className="w-28 h-28 rounded-full m-2"
               src={user.profilePicture}
-              
             />
           </div>
           <div>
@@ -71,11 +75,7 @@ useEffect(()=>{
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4 w-full m-2">
         {posts &&
           posts.map((post, index) => (
-            <UserPost
-              key={index}
-              image={post.image}
-              postId={post._id}
-            />
+            <UserPost key={index} image={post.image} postId={post._id} />
           ))}
       </div>
     </div>

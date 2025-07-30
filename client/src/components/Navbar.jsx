@@ -1,4 +1,4 @@
-import { Link ,NavLink} from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 
 function Navbar() {
   return (
@@ -7,15 +7,11 @@ function Navbar() {
         <b>Connect</b>
       </Link>
       <div className="flex gap-2">
-        <NavLink to="/">
-          Home
-        </NavLink>
-        <NavLink to="/profile">
-          Profile
-        </NavLink>
+        <NavLink to="/">Home</NavLink>
+        <NavLink to="/profile">Profile</NavLink>
       </div>
     </div>
   );
 }
 
-export default Navbar
+export default Navbar;

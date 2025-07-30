@@ -4,9 +4,9 @@ import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../context/AppContext";
 import axios from "axios";
 function HomeFeed() {
-  const { backendUrl, token,fetchPost,fetchedPost, setFetchedPost } = useContext(AppContext);
-  
-  
+  const { backendUrl, token, fetchPost, fetchedPost, setFetchedPost } =
+    useContext(AppContext);
+
   useEffect(() => {
     if (token) {
       fetchPost();

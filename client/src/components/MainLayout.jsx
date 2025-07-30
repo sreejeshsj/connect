@@ -6,7 +6,7 @@ import Profile from "../pages/Profile";
 import HomeFeed from "./HomeFeed";
 import Comment from "./Comment";
 import Post from "./Post";
-import Messages from '../components/Messages'
+import Messages from "../components/Messages";
 import UserProfile from "../pages/UserProfile";
 import SearchFeed from "./SearchFeed";
 
@@ -23,9 +23,9 @@ function MainLayout() {
             <Route path="/home-feed" element={<HomeFeed />} />
             <Route path="/comment" element={<Comment />} />
             <Route path="/post" element={<Post />} />
-            <Route path="/messages" element={<Messages/>} />
-            <Route path="/user-profile" element={<UserProfile/>} />
-            <Route path="/search" element={<SearchFeed/>} />
+            <Route path="/messages" element={<Messages />} />
+            <Route path="/user-profile" element={<UserProfile />} />
+            <Route path="/search" element={<SearchFeed />} />
           </Routes>
         </div>
       </div>
