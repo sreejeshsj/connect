@@ -139,7 +139,7 @@ const fetchFollowedUserPost=async (req,res)=>{
 //fetch all post 
 const fetchAll=async (req,res)=>{
   try {
-    const post = await PostModel.find()
+    const post = await PostModel.find().populate('userId')
     res.json({
       success:true,
       count:post.length,

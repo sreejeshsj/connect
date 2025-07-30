@@ -4,26 +4,12 @@ import { AppContext } from '../context/AppContext';
 import UserPost from "../components/UserPost";
 
 function UserProfile() {
-  const { backendUrl, token, userId, user, getUserDetails } = useContext(AppContext);
-  const [userDetails, setUserDetails] = useState([]);
+  const {  token, userId, user, getUserDetails ,userDetails,fetchUserDetails} = useContext(AppContext);
+  
   const [userProfile, setUserProfile] = useState(null);
   const [followCheck, setFollowCheck] = useState(false);
 
-  const fetchUserDetails = async () => {
-    try {
-      const response = await axios.post(
-        `${backendUrl}/api/post/get-user-profile`,
-        { userId },
-        { headers: { token } }
-      );
-      if (response.data.success) {
-        setUserDetails(response.data.userData);
-      }
-    } catch (error) {
-      console.log("error");
-    }
-  };
-
+   
   useEffect(() => {
     if (token) {
       fetchUserDetails();

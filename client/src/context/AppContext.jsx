@@ -16,6 +16,7 @@ export const AppContextProvider = (props) => {
   const [comment, setComment] = useState("");
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [message, setMessage] = useState("");
+  const [userDetails, setUserDetails] = useState([]);
   const [user, setUser] = useState({
     name: "",
     profilePicture: "",
@@ -75,6 +76,21 @@ export const AppContextProvider = (props) => {
     setComment((prev) => prev + emojidata.emoji);
     setMessage((prev)=> prev + emojidata.emoji)
   };
+
+  const fetchUserDetails = async () => {
+    try {
+      const response = await axios.post(
+        `${backendUrl}/api/post/get-user-profile`,
+        { userId },
+        { headers: { token } }
+      );
+      if (response.data.success) {
+        setUserDetails(response.data.userData);
+      }
+    } catch (error) {
+      console.log("error");
+    }
+  };
   const value = { 
     backendUrl,
     navigate,
@@ -97,7 +113,8 @@ export const AppContextProvider = (props) => {
     comment, setComment,
     showEmojiPicker, setShowEmojiPicker,
     message, setMessage,
-    userId,setUserId
+    userId,setUserId,
+    userDetails, setUserDetails,fetchUserDetails
   };
 
   return (
