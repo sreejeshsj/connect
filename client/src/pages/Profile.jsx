@@ -3,6 +3,7 @@ import { AppContext } from "../context/AppContext";
 import axios from "axios";
 import UserPost from "../components/UserPost";
 import EditProfilePic from "../components/EditProfilePic";
+import EditPost from "../components/EditPost";
 
 function Profile() {
   const {
@@ -14,6 +15,8 @@ function Profile() {
     getAlFollowingUser,
     setShowProfilePicEdit,
     showProfilePicEdit,
+    showPostEdit,setShowPostEdit,
+    
   } = useContext(AppContext);
   const [posts, setPosts] = useState([]);
 
@@ -36,7 +39,7 @@ function Profile() {
       getUserPosts();
       getAlFollowingUser();
     }
-  }, [token]);
+  }, [token,showPostEdit]);
  
 
   return (
@@ -78,7 +81,7 @@ function Profile() {
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4 w-full m-2">
         {posts &&
           posts.map((post, index) => (
-            <UserPost key={index} image={post.image} postId={post._id} />
+            <UserPost key={index} image={post.image} postId={post._id} caption={post.caption}/>
           ))}
       </div>
       {showProfilePicEdit && (
@@ -86,6 +89,14 @@ function Profile() {
           <EditProfilePic />
         </div>
       )}
+
+      {
+      showPostEdit && (
+        <div >
+          <EditPost />
+        </div>
+      )
+      }
     </div>
   );
 }

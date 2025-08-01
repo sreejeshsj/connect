@@ -18,6 +18,12 @@ export const AppContextProvider = (props) => {
   const [message, setMessage] = useState("");
   const [userDetails, setUserDetails] = useState([]);
   const [showProfilePicEdit,setShowProfilePicEdit]=useState(false)
+  const [showPostEdit,setShowPostEdit]=useState(false)
+  const [postDetails,setPostDetails]=useState({
+    id:"",
+    caption:"",
+    image:""
+  })
   const [user, setUser] = useState({
     name: "",
     profilePicture: "",
@@ -132,7 +138,9 @@ export const AppContextProvider = (props) => {
     setUserDetails,
     fetchUserDetails,
     showProfilePicEdit,
-    setShowProfilePicEdit
+    setShowProfilePicEdit,
+    showPostEdit,setShowPostEdit,
+    postDetails,setPostDetails
   };
 
   return (
