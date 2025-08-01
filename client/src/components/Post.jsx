@@ -2,11 +2,11 @@ import React, { useContext, useState } from "react";
 import assets from "../assets/assets";
 import axios from "axios";
 import { AppContext } from "../context/AppContext";
-
+import {toast} from 'react-toastify'
 function Post() {
   const [image, setImage] = useState("");
   const [caption, setCaption] = useState("");
-  const { backendUrl, token } = useContext(AppContext);
+  const { backendUrl, token, navigate } = useContext(AppContext);
   const formData = new FormData();
   formData.append("caption", caption);
   formData.append("image", image);
@@ -19,7 +19,10 @@ function Post() {
         formData,
         { headers: { token } }
       );
-      console.log(response.data);
+      if(response.data.success){
+        navigate('/profile')
+        toast.success("Post Uploaded Successfully")
+      }
     } catch (error) {
       console.log("Error");
     }

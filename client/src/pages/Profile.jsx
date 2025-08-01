@@ -39,7 +39,7 @@ function Profile() {
       getUserPosts();
       getAlFollowingUser();
     }
-  }, [token,showPostEdit]);
+  }, [token,showPostEdit,posts]);
  
 
   return (
@@ -63,7 +63,7 @@ function Profile() {
               </button>
             </div>
             <div className="flex gap-2 justify-end ">
-              <p className="m-2 mt-5 font-bold">Posts</p>
+              <p className="m-2 mt-5 font-bold">Posts {posts?.length}</p>
               <p className="m-2 mt-5 font-bold">
                 Followers {user.followers?.length || 0}
               </p>

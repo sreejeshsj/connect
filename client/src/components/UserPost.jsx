@@ -2,11 +2,24 @@ import React, { useContext, useState } from "react";
 import { AppContext } from "../context/AppContext";
 import { Heart, MessageCircle } from "lucide-react";
 import assets from "../assets/assets";
+import axios from "axios";
 
 function UserPost(props) {
-  const { setPostId, setImage, navigate, likeHandler, likedPosts,showPostEdit,setShowPostEdit,postDetails,setPostDetails } =
+  const { setPostId, setImage, navigate, likeHandler, likedPosts,showPostEdit,setShowPostEdit,postDetails,setPostDetails,backendUrl,token } =
     useContext(AppContext);
   const [visible,setVisible]=useState(false)
+
+  const handleDelete=async (postId)=>{
+    try {
+      const response=await axios.post(`${backendUrl}/api/post/delete/${postId}`,{},{headers:{token}})
+      if(response.data.success){
+        console.log(response.data)
+
+      }
+    } catch (error) {
+      console.log(error.message)
+    }
+  }
   return (
     <div className="relative group w-full sm:w-[300px] h-[300px] sm:h-[300px] overflow-hidden rounded-xl bg-white shadow-md cursor-pointer">
       {/* Post Image */}
@@ -43,7 +56,7 @@ function UserPost(props) {
               setShowPostEdit(true)
               setPostDetails(prev=>({...prev,caption:props.caption,image:props.image,id:props.postId}))
               }} className="text-2xl font-medium text-black-500 shadow w-full text-center">Edit</p>
-            <p className="text-2xl font-medium text-red-500 shadow w-full text-center">Delete</p>
+            <p onClick={()=>handleDelete(props.postId)} className="text-2xl font-medium text-red-500 shadow w-full text-center">Delete</p>
             <p onClick={() => setVisible(false)} className='absolute top-5 right-5 cursor-pointer font-bold'>X</p>
         </div>}
       </div>
