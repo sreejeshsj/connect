@@ -2,16 +2,18 @@ import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../context/AppContext";
 import axios from "axios";
 import UserPost from "../components/UserPost";
+import EditProfilePic from "../components/EditProfilePic";
 
 function Profile() {
   const {
+    navigate,
     backendUrl,
     token,
-    setImage,
-    setPostId,
     getUserDetails,
     user,
     getAlFollowingUser,
+    setShowProfilePicEdit,
+    showProfilePicEdit,
   } = useContext(AppContext);
   const [posts, setPosts] = useState([]);
 
@@ -35,24 +37,25 @@ function Profile() {
       getAlFollowingUser();
     }
   }, [token]);
-  useEffect(() => {
-    console.log(user);
-  }, [token]);
+ 
 
   return (
     <div className="flex flex-col items-center justify-center w-full gap-4">
       {user && (
         <div className="flex gap-4">
           <div>
-            <img
+           {
+            user.profilePicture && <img
               className="w-28 h-28 rounded-full m-2"
               src={user.profilePicture}
+              onClick={()=>setShowProfilePicEdit(true)}
             />
+           } 
           </div>
           <div>
             <div className="flex gap-2 justify-start ">
               <p className="m-2 mt-5 font-bold">{user.name}</p>
-              <button className="m-2 mt-5 text-white bg-black px-4 py-1 rounded-lg">
+              <button onClick={()=>navigate('/update')} className="m-2 mt-5 text-white bg-black px-4 py-1 rounded-lg">
                 Edit
               </button>
             </div>
@@ -78,6 +81,11 @@ function Profile() {
             <UserPost key={index} image={post.image} postId={post._id} />
           ))}
       </div>
+      {showProfilePicEdit && (
+        <div className="absolute top-0 left-0 right-0 bottom-0 z-10">
+          <EditProfilePic />
+        </div>
+      )}
     </div>
   );
 }

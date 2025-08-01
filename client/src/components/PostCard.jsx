@@ -9,8 +9,7 @@ function PostCard(props) {
     setImage,
     likeHandler,
     likedPosts,
-    setUserId,
-    fetchUserDetails,
+    
   } = useContext(AppContext);
 
   return (

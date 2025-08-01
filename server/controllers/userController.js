@@ -92,7 +92,7 @@ const getSingleUser = async (req, res) => {
   } catch (error) {
     res.json({
       success: false,
-      message: "jwkej",
+      message: error.message,
     });
   }
 };
@@ -131,7 +131,7 @@ const updateUserProfile = async (req, res) => {
 const updateProfilePicture = async (req, res) => {
   try {
     const profilePicture = req.file;
-    console.log(profilePicture);
+    
     if (!profilePicture) {
       return res.json({
         success: false,
@@ -145,7 +145,7 @@ const updateProfilePicture = async (req, res) => {
         { profilePicture: result.secure_url },
         { new: true }
       );
-
+     
       res.json({
         success: true,
         message: "dp updated successfully",

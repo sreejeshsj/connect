@@ -17,6 +17,7 @@ export const AppContextProvider = (props) => {
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [message, setMessage] = useState("");
   const [userDetails, setUserDetails] = useState([]);
+  const [showProfilePicEdit,setShowProfilePicEdit]=useState(false)
   const [user, setUser] = useState({
     name: "",
     profilePicture: "",
@@ -97,6 +98,8 @@ export const AppContextProvider = (props) => {
       console.log("error");
     }
   };
+
+  
   const value = {
     backendUrl,
     navigate,
@@ -128,6 +131,8 @@ export const AppContextProvider = (props) => {
     userDetails,
     setUserDetails,
     fetchUserDetails,
+    showProfilePicEdit,
+    setShowProfilePicEdit
   };
 
   return (
