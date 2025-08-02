@@ -1,17 +1,31 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { FaShare } from "react-icons/fa";
 import { AppContext } from "../context/AppContext";
 import { Heart, MessageCircle } from "lucide-react";
 function PostCard(props) {
   const {
+    user,
     navigate,
     setPostId,
     setImage,
     likeHandler,
-    likedPosts,
-    
+    getUserDetails,
+    token
   } = useContext(AppContext);
-
+  const [like ,setLike]=useState(false)
+  useEffect(()=>{
+      getUserDetails()
+  },[token])
+  useEffect(()=>{
+    
+    if(user && props.liked.includes(user._id)){
+      setLike(true)
+      
+    }else {
+    setLike(false);
+  }
+  },[user,props.liked])
+ 
   return (
     <div className="bg-white rounded-lg shadow mb-6 w-full max-w-md mx-auto">
       <div className="flex mt-5 mb-5 ">
@@ -31,7 +45,7 @@ function PostCard(props) {
         <Heart
           onClick={() => likeHandler(props.postId)}
           className={`${
-            likedPosts[props.postId] ? "text-red-500 fill-red-500" : ""
+            like ? "text-red-500 fill-red-500" : ""
           }hover:text-red-500 cursor-pointer`}
         />
         <MessageCircle

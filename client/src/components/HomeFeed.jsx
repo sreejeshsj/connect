@@ -24,6 +24,7 @@ function HomeFeed() {
               caption={post.caption}
               image={post.image}
               name={post.userId.name}
+              liked={post.like}
               like={post.like?.length}
               dp={post.userId.profilePicture}
             />

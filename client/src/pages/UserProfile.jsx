@@ -80,10 +80,7 @@ function UserProfile() {
     }
   }, [userProfile]);
 
-  useEffect(() => {
-    console.log(userDetails);
-  }, []);
-
+  
   return (
     <div className="flex flex-col items-center justify-center w-full gap-4 p-4">
       {userProfile && (
@@ -122,9 +119,9 @@ function UserProfile() {
             </div>
 
             <div className="flex justify-center md:justify-start gap-4 mt-4 text-sm font-semibold">
-              <p>Posts</p>
-              <p>Followers</p>
-              <p>Following</p>
+              <p>Posts {userDetails?.length}</p>
+              <p>Followers {userProfile?.userId?.followers?.length || 0}</p>
+              <p>Following {userProfile?.userId?.following?.length || 0}</p>
             </div>
 
             <div className="mt-3 text-sm">{userProfile.userId.bio}</div>

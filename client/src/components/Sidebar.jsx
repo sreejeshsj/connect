@@ -1,7 +1,10 @@
 import { NavLink } from "react-router-dom";
 import { Home, Plus, User, Mail, LogOut, Info, Search } from "lucide-react";
+import { useContext } from "react";
+import { AppContext } from "../context/AppContext";
 
 function Sidebar() {
+  const {navigate}=useContext(AppContext)
   return (
     <>
       {/* Desktop Sidebar */}
@@ -35,8 +38,12 @@ function Sidebar() {
             <span>About</span>
           </NavLink>
           <NavLink
-            onClick={() => localStorage.removeItem("token")}
-            to="/logout"
+            onClick={() => {
+              localStorage.removeItem("token")
+              localStorage.removeItem("selectedUserId")
+              navigate('/login')
+            }}
+            to='/logout'
             className="flex items-center gap-2"
           >
             <LogOut size={20} />
