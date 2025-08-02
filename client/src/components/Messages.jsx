@@ -16,14 +16,13 @@ function Messages() {
     setFollowingUser,
     showEmojiPicker,
     setShowEmojiPicker,
-   
   } = useContext(AppContext);
-  const [message,setMessage]=useState('')
+  const [message, setMessage] = useState("");
   const [visible, setVisible] = useState(false);
   const [messages, setMessages] = useState([]);
   const [receiver, setReceiver] = useState("");
-  const [search,setSearch] = useState('')
-  const [originalFollowingUser, setOriginalFollowingUser] = useState([])
+  const [search, setSearch] = useState("");
+  const [originalFollowingUser, setOriginalFollowingUser] = useState([]);
   const sendMessage = async () => {
     if (message.trim()) {
       socket.emit("sendMessage", {
@@ -81,27 +80,25 @@ function Messages() {
       getAlFollowingUser();
     }
   }, []);
-  useEffect(()=>{
-    setOriginalFollowingUser(followingUser)
-  },[followingUser])
   useEffect(() => {
-  if (search.trim()) {
-    const filtered = followingUser.filter((user) =>
-      user.name.toLowerCase().includes(search.toLowerCase())
-    );
-    setOriginalFollowingUser(filtered);
-  } else {
     setOriginalFollowingUser(followingUser);
-  }
-}, [search]);
-  
-const handleEmojiClick = (emojidata) => {
-   setMessage(prev=>prev+emojidata.emoji)
-   
+  }, [followingUser]);
+  useEffect(() => {
+    if (search.trim()) {
+      const filtered = followingUser.filter((user) =>
+        user.name.toLowerCase().includes(search.toLowerCase())
+      );
+      setOriginalFollowingUser(filtered);
+    } else {
+      setOriginalFollowingUser(followingUser);
+    }
+  }, [search]);
+
+  const handleEmojiClick = (emojidata) => {
+    setMessage((prev) => prev + emojidata.emoji);
   };
   return (
     <div className="flex flex-col sm:flex-row h-screen">
-      
       <div
         className={`${
           visible ? "hidden" : "flex"
@@ -111,16 +108,14 @@ const handleEmojiClick = (emojidata) => {
           <div className="h-10 flex items-center justify-center w-full font-semibold">
             {user.name}
           </div>
-           <div  className="flex items-center justify-center gap-2 w-full">
-                <input
-                onChange={(e)=>setSearch(e.target.value)}
-            className="w-[80%] text-center px-4 py-2 border border-gray-400 outline-none rounded-lg"
-            type="text"
-            placeholder="Search"
-          />
-          
-           </div>
-          
+          <div className="flex items-center justify-center gap-2 w-full">
+            <input
+              onChange={(e) => setSearch(e.target.value)}
+              className="w-[80%] text-center px-4 py-2 border border-gray-400 outline-none rounded-lg"
+              type="text"
+              placeholder="Search"
+            />
+          </div>
 
           <div className="flex w-full justify-between px-4 font-medium">
             <p>Messages</p>
@@ -151,61 +146,67 @@ const handleEmojiClick = (emojidata) => {
         </div>
       </div>
 
-      
       <div
         className={`${
           visible ? "flex" : "hidden"
         } sm:flex flex-col sm:w-[60%] h-full relative`}
       >
-        
         <div className="sm:hidden p-2">
           <button
-            className="text-blue-500 font-semibold"
+            className=" sticky text-blue-500 font-semibold"
             onClick={() => setVisible(false)}
           >
             ← Back
           </button>
         </div>
 
-        
-        <div className="flex-1 overflow-y-auto px-4 py-2 scrollbar-hide">
-          {messages &&
-            messages.map((msg, index) => (
-              <p key={index} className="mb-2">
-                <b>{msg.sender === user._id ? "You" : "Them"}:</b>{" "}
-                {msg.message}
-              </p>
-            ))}
-        </div>
-
-        
-        <div className="sticky bottom-0 w-full bg-white p-2 flex items-center gap-2 border-t border-gray-300">
-          <input
-            onChange={(e) => setMessage(e.target.value)}
-            type="text"
-            value={message}
-            className="flex-1 border border-gray-400 p-2 rounded"
-            placeholder="Type something..."
-          />
-
-          <div className="relative">
-            <button onClick={() => setShowEmojiPicker((prev) => !prev)}>
-              😊
-            </button>
-            {showEmojiPicker && (
-              <div className="absolute bottom-full   right-0 z-50 h-[300px] max-h-[400px] overflow-y-auto bg-white border rounded shadow">
-                <EmojiPicker onEmojiClick={handleEmojiClick} />
-              </div>
-            )}
+        {visible && (
+          <div className=" flex-1 overflow-y-auto px-4 py-2 scrollbar-hide">
+            {messages &&
+              messages.map((msg, index) => (
+                <p key={index} className="mb-2">
+                  <b>{msg.sender === user._id ? "You" : "Them"}:</b>{" "}
+                  {msg.message}
+                </p>
+              ))}
           </div>
- 
-          <img
-            onClick={sendMessage}
-            className="w-10 h-10 cursor-pointer"
-            src={assets.send_icon}
-            alt="Send"
-          />
-        </div>
+        )}
+
+        {visible && (
+          <div className="sticky bottom-0 w-full bg-white p-2 flex items-center gap-2 border-t border-gray-300">
+            <input
+              onChange={(e) => setMessage(e.target.value)}
+              type="text"
+              value={message}
+              className="flex-1 border border-gray-400 p-2 rounded"
+              placeholder="Type something..."
+            />
+
+            <div className="relative">
+              <button onClick={() => setShowEmojiPicker((prev) => !prev)}>
+                😊
+              </button>
+              {showEmojiPicker && (
+                <div className="absolute bottom-full   right-0 z-50 h-[300px] max-h-[400px] overflow-y-auto bg-white border rounded shadow">
+                  <EmojiPicker onEmojiClick={handleEmojiClick} />
+                </div>
+              )}
+            </div>
+
+            <img
+              onClick={sendMessage}
+              className="w-10 h-10 cursor-pointer"
+              src={assets.send_icon}
+              alt="Send"
+            />
+          </div>
+        )}
+        {
+          !visible && <div className="flex justify-center items-center h-[80%]">
+            <p>Send Message</p>
+          </div>
+
+        }
       </div>
     </div>
   );

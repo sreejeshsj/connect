@@ -1,4 +1,3 @@
-
 import axios from "axios";
 import { createContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -14,17 +13,19 @@ export const AppContextProvider = (props) => {
   const [token, setToken] = useState(localStorage.getItem("token"));
   const [fetchedPost, setFetchedPost] = useState([]);
   const navigate = useNavigate();
-  const [loggedInUser,setLoggedInUser]=useState(localStorage.getItem('loggedInUserId'))
+  const [loggedInUser, setLoggedInUser] = useState(
+    localStorage.getItem("loggedInUserId")
+  );
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [message, setMessage] = useState("");
   const [userDetails, setUserDetails] = useState([]);
-  const [showProfilePicEdit,setShowProfilePicEdit]=useState(false)
-  const [showPostEdit,setShowPostEdit]=useState(false)
-  const [postDetails,setPostDetails]=useState({
-    id:"",
-    caption:"",
-    image:""
-  })
+  const [showProfilePicEdit, setShowProfilePicEdit] = useState(false);
+  const [showPostEdit, setShowPostEdit] = useState(false);
+  const [postDetails, setPostDetails] = useState({
+    id: "",
+    caption: "",
+    image: "",
+  });
   const [user, setUser] = useState({
     name: "",
     profilePicture: "",
@@ -106,7 +107,6 @@ export const AppContextProvider = (props) => {
     }
   };
 
-  
   const value = {
     backendUrl,
     navigate,
@@ -128,7 +128,7 @@ export const AppContextProvider = (props) => {
     followingUser,
     setFollowingUser,
     handleEmojiClick,
-   
+
     showEmojiPicker,
     setShowEmojiPicker,
     message,
@@ -140,9 +140,12 @@ export const AppContextProvider = (props) => {
     fetchUserDetails,
     showProfilePicEdit,
     setShowProfilePicEdit,
-    showPostEdit,setShowPostEdit,
-    postDetails,setPostDetails,
-    loggedInUser,setLoggedInUser
+    showPostEdit,
+    setShowPostEdit,
+    postDetails,
+    setPostDetails,
+    loggedInUser,
+    setLoggedInUser,
   };
 
   return (

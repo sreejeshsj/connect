@@ -4,7 +4,7 @@ import { AppContext } from "../context/AppContext";
 import axios from "axios";
 
 function EditPost() {
-  const { setShowPostEdit, navigate, postDetails, backendUrl, token } =
+  const { setShowPostEdit, postDetails, backendUrl, token } =
     useContext(AppContext);
 
   const [newCaption, setNewCaption] = useState("");
@@ -49,7 +49,7 @@ function EditPost() {
         {/* Image Upload and Preview */}
         <label htmlFor="imageInput" className="cursor-pointer">
           <img
-            className="w-64 h-64 sm:w-[400px] sm:h-[400px] object-cover rounded"
+            className="w-64 h-64 sm:w-[500px] sm:h-[400px] object-cover rounded"
             src={image ? URL.createObjectURL(image) : postDetails.image}
             alt="post preview"
           />
@@ -94,6 +94,7 @@ function EditPost() {
           >
             Save Changes
           </button>
+          <p onClick={()=>setShowPostEdit(false)} className="absolute top-5 right-5 cursor-pointer font-bold">X</p>
         </div>
       </form>
     </div>
