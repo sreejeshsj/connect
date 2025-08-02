@@ -126,6 +126,7 @@ export const AppContextProvider = (props) => {
     setUser,
     getAlFollowingUser,
     followingUser,
+    setFollowingUser,
     handleEmojiClick,
    
     showEmojiPicker,

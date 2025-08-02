@@ -13,7 +13,7 @@ function Messages() {
     followingUser,
     user,
     getUserDetails,
-    
+    setFollowingUser,
     showEmojiPicker,
     setShowEmojiPicker,
    
@@ -22,7 +22,8 @@ function Messages() {
   const [visible, setVisible] = useState(false);
   const [messages, setMessages] = useState([]);
   const [receiver, setReceiver] = useState("");
-
+  const [search,setSearch] = useState('')
+  const [originalFollowingUser, setOriginalFollowingUser] = useState([])
   const sendMessage = async () => {
     if (message.trim()) {
       socket.emit("sendMessage", {
@@ -80,6 +81,20 @@ function Messages() {
       getAlFollowingUser();
     }
   }, []);
+  useEffect(()=>{
+    setOriginalFollowingUser(followingUser)
+  },[followingUser])
+  useEffect(() => {
+  if (search.trim()) {
+    const filtered = followingUser.filter((user) =>
+      user.name.toLowerCase().includes(search.toLowerCase())
+    );
+    setOriginalFollowingUser(filtered);
+  } else {
+    setOriginalFollowingUser(followingUser);
+  }
+}, [search]);
+  
 const handleEmojiClick = (emojidata) => {
    setMessage(prev=>prev+emojidata.emoji)
    
@@ -96,12 +111,16 @@ const handleEmojiClick = (emojidata) => {
           <div className="h-10 flex items-center justify-center w-full font-semibold">
             {user.name}
           </div>
-
-          <input
+           <div  className="flex items-center justify-center gap-2 w-full">
+                <input
+                onChange={(e)=>setSearch(e.target.value)}
             className="w-[80%] text-center px-4 py-2 border border-gray-400 outline-none rounded-lg"
             type="text"
             placeholder="Search"
           />
+          
+           </div>
+          
 
           <div className="flex w-full justify-between px-4 font-medium">
             <p>Messages</p>
@@ -111,7 +130,7 @@ const handleEmojiClick = (emojidata) => {
 
         <div className="flex-1 overflow-y-auto px-4 scrollbar-hide">
           <div className="flex flex-col gap-4 mt-4">
-            {followingUser.map((user, index) => (
+            {originalFollowingUser.map((user, index) => (
               <div
                 key={index}
                 className="flex items-center gap-2 cursor-pointer"
