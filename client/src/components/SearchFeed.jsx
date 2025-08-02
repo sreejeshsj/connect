@@ -15,7 +15,7 @@ function SearchFeed() {
   } = useContext(AppContext);
   const [search, setSearch] = useState("");
   const [filteredPost, setFilteredPost] = useState([]);
-  const [click, setClick] = useState(false);
+  const [searchActive, setSerachActive] = useState(false);
   const [posts, setPosts] = useState([]);
   const handleAllPost = async () => {
     try {
@@ -31,14 +31,18 @@ function SearchFeed() {
   };
 
   const searchHandler = () => {
-    const filtered = posts.filter((post) =>
+    if(search.trim()){
+      const filtered = posts.filter((post) =>
       post.userId.name.toLowerCase().includes(search.toLowerCase())
     );
     const uniqueFiltered = Array.from(
       new Map(filtered.map((post) => [post.userId._id, post])).values()
     );
-    console.log(uniqueFiltered);
+    
     setFilteredPost(uniqueFiltered);
+    setSearch("")
+    }
+    
   };
   useEffect(() => {
     if (token) {
@@ -51,13 +55,17 @@ function SearchFeed() {
       <div className="w-full flex justify-center gap-2">
         <input
           onChange={(e) => setSearch(e.target.value)}
+          value={search}
           className=" w-[80%] border border-gray-400 m-4 outline-none px-4 py-2 rounded-lg shadow"
           type="text"
           placeholder="Search here"
         />
-        {click ? (
+        {searchActive ? (
           <p
-            onClick={() => setClick(false)}
+            onClick={() => {
+              setFilteredPost([])
+              setSerachActive(false)
+            }}
             className="text-2xl mt-4 ml-1 w-10 h-10 border border-gray-500 rounded-full text-center cursor-pointer leading-[2.5rem]"
           >
             X
@@ -66,13 +74,13 @@ function SearchFeed() {
           <Search
             onClick={() => {
               searchHandler();
-              setClick(true);
+              setSerachActive(true);
             }}
             className="mt-4 ml-1 w-10 h-10 border-gray-500 cursor-pointer"
           />
         )}
       </div>
-      {click && filteredPost
+      {searchActive && filteredPost.length>0
         ? filteredPost.map((data, index) => (
             <div
               key={index}
@@ -96,7 +104,7 @@ function SearchFeed() {
               </p>
             </div>
           ))
-        : click && <p>No User Found</p>}
+        : searchActive && filteredPost.length===0 ? <p>No User Found</p> : ''}
       <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-3 p-2">
         {posts &&
           posts.map((post, index) => (

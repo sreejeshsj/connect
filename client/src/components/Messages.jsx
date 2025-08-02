@@ -128,7 +128,7 @@ function Messages() {
             {originalFollowingUser.map((user, index) => (
               <div
                 key={index}
-                className="flex items-center gap-2 cursor-pointer"
+                className={`flex items-center gap-2 px-4 py-2 cursor-pointer ${receiver===user._id ? 'bg-gray-200' :''} `}
                 onClick={() => {
                   setVisible(true);
                   setReceiver(user._id);
@@ -164,10 +164,18 @@ function Messages() {
           <div className=" flex-1 overflow-y-auto px-4 py-2 scrollbar-hide">
             {messages &&
               messages.map((msg, index) => (
-                <p key={index} className="mb-2">
-                  <b>{msg.sender === user._id ? "You" : "Them"}:</b>{" "}
-                  {msg.message}
-                </p>
+                
+                <div key={index} className="flex flex-col gap-2">
+                  {msg.sender === user._id ? (
+                    <div className="self-end bg-blue-500 text-white px-4 py-2 m-2 rounded-lg max-w-[70%]">
+                      <p>{msg.message}</p>
+                    </div>
+                  ) : (
+                    <div className="self-start bg-gray-200 px-4 py-2 rounded-lg max-w-[70%]">
+                      <p>{msg.message}</p>
+                    </div>
+                  )}
+                </div>
               ))}
           </div>
         )}
@@ -201,12 +209,11 @@ function Messages() {
             />
           </div>
         )}
-        {
-          !visible && <div className="flex justify-center items-center h-[80%]">
+        {!visible && (
+          <div className="flex justify-center items-center h-[80%]">
             <p>Send Message</p>
           </div>
-
-        }
+        )}
       </div>
     </div>
   );
