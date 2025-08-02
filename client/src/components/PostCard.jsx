@@ -10,15 +10,29 @@ function PostCard(props) {
     setImage,
     likeHandler,
     getUserDetails,
-    token
+    token,
+    setLiked,
+    liked,
+    
   } = useContext(AppContext);
   const [like ,setLike]=useState(false)
+
+  const commentHandler=(image,postId,liked,dp)=>{
+    setImage(image)
+    setPostId(postId)
+    
+    
+    localStorage.setItem('image',image)
+    localStorage.setItem('postId',postId)
+    localStorage.setItem('liked',JSON.stringify(liked))
+    localStorage.setItem('dp',dp)
+  }
   useEffect(()=>{
       getUserDetails()
   },[token])
   useEffect(()=>{
     
-    if(user && props.liked.includes(user._id)){
+    if(user && props.liked?.includes(user._id)){
       setLike(true)
       
     }else {
@@ -50,9 +64,9 @@ function PostCard(props) {
         />
         <MessageCircle
           onClick={() => {
-            setPostId(props.postId);
-            setImage(props.image);
+            commentHandler(props.image,props.postId,props.liked,props.dp)
             navigate("/comment");
+            
           }}
           className="hover:text-blue-500 cursor-pointer "
         />

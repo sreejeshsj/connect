@@ -41,6 +41,7 @@ function Sidebar() {
             onClick={() => {
               localStorage.removeItem("token")
               localStorage.removeItem("selectedUserId")
+              localStorage.removeItem("loggedInUserId")
               navigate('/login')
             }}
             to='/logout'

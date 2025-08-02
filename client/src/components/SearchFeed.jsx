@@ -5,8 +5,14 @@ import { AppContext } from "../context/AppContext";
 import UserPost from "./UserPost";
 
 function SearchFeed() {
-  const { backendUrl, token, setUserId, navigate, fetchUserDetails } =
-    useContext(AppContext);
+  const {
+    backendUrl,
+    token,
+    setUserId,
+    navigate,
+    fetchUserDetails,
+    loggedInUser,
+  } = useContext(AppContext);
   const [search, setSearch] = useState("");
   const [filteredPost, setFilteredPost] = useState([]);
   const [click, setClick] = useState(false);
@@ -71,8 +77,12 @@ function SearchFeed() {
             <div
               key={index}
               onClick={() => {
-                localStorage.setItem("selectedUserId", data.userId._id);
-                navigate("/user-profile");
+                if (data.userId._id === loggedInUser) {
+                  navigate("/profile");
+                } else {
+                  localStorage.setItem("selectedUserId", data.userId._id);
+                  navigate("/user-profile");
+                }
               }}
               className="flex h-28 items-center justify-center shadow border rounded-lg w-[50%] gap-2"
             >

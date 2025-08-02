@@ -8,17 +8,25 @@ import EmojiPicker from "emoji-picker-react";
 function Comment() {
   const {
     postId,
+    setPostId,
     backendUrl,
     token,
     image,
-    handleEmojiClick,
-    comment,
-    setComment,
-    showEmojiPicker,
-    setShowEmojiPicker,
+    setImage,
+    
+    
+    
+    liked,
+   
   } = useContext(AppContext);
+  const [comment, setComment]=useState('')
   const [comments, setComments] = useState([]);
-
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false)
+  useEffect(() => {
+    if (!postId) {
+      setPostId(localStorage.getItem("postId"));
+    }
+  }, [postId]);
   const getComments = async () => {
     try {
       const response = await axios.post(
@@ -56,10 +64,26 @@ function Comment() {
     }
   }, [token, postId]);
 
+  useEffect(() => {
+    if (!image) {
+      setImage(localStorage.getItem("image"));
+    }
+  }, [image]);
+  const handleEmojiClick = (emojidata) => {
+    setComment((prev) => prev + emojidata.emoji);
+   
+  };
   return (
     <div className="flex flex-col sm:flex-row w-full min-h-screen">
       <div className="w-full sm:w-full p-4 sm:sticky sm:top-4 h-fit bg-white">
-        {image && <PostCard image={image} />}
+        {image && (
+          <PostCard
+            image={image}
+            liked={liked}
+            postId={postId}
+            dp={localStorage.getItem('db')}
+          />
+        )}
       </div>
 
       <div className="w-full mb-10 sm:w-2/3 p-4 mt-10 flex flex-col gap-4">
@@ -107,7 +131,7 @@ function Comment() {
           </div>
 
           {showEmojiPicker && (
-            <div className="mt-2 z-50">
+            <div className="flex justify-center    z-50 max-h-[350px]">
               <EmojiPicker onEmojiClick={handleEmojiClick} />
             </div>
           )}

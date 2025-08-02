@@ -27,6 +27,7 @@ function Profile() {
         { headers: { token } }
       );
       if (response.data.success) {
+        
         setPosts(response.data.post);
       }
     } catch (error) {
@@ -40,7 +41,9 @@ function Profile() {
       getAlFollowingUser();
     }
   }, [token,showPostEdit,posts]);
- 
+ useEffect(()=>{
+  console.log(user._id)
+ },[user])
 
   return (
     <div className="flex flex-col items-center justify-center w-full gap-4">
@@ -81,7 +84,7 @@ function Profile() {
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4 w-full m-2">
         {posts &&
           posts.map((post, index) => (
-            <UserPost key={index} image={post.image} postId={post._id} caption={post.caption}/>
+            <UserPost key={index} image={post.image} postId={post._id} caption={post.caption} userId={user?._id}/>
           ))}
       </div>
       {showProfilePicEdit && (

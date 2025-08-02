@@ -4,6 +4,7 @@ import assets from "../assets/assets";
 import EmojiPicker from "emoji-picker-react";
 import socket from "../socket";
 import axios from "axios";
+
 function Messages() {
   const {
     backendUrl,
@@ -12,14 +13,13 @@ function Messages() {
     followingUser,
     user,
     getUserDetails,
-    handleEmojiClick,
+    
     showEmojiPicker,
     setShowEmojiPicker,
-    message,
-    setMessage,
+   
   } = useContext(AppContext);
+  const [message,setMessage]=useState('')
   const [visible, setVisible] = useState(false);
-
   const [messages, setMessages] = useState([]);
   const [receiver, setReceiver] = useState("");
 
@@ -30,13 +30,15 @@ function Messages() {
         receiver: receiver,
         message: message,
       });
+
+      setMessages((prev) => [
+        ...prev,
+        { sender: user._id, receiver: receiver, message },
+      ]);
+      setMessage("");
     }
-    setMessages((prev) => [
-      ...prev,
-      { sender: user._id, receiver: receiver, message },
-    ]);
-    setMessage("");
   };
+
   useEffect(() => {
     if (user._id) {
       socket.emit("join", user._id);
@@ -78,12 +80,17 @@ function Messages() {
       getAlFollowingUser();
     }
   }, []);
+const handleEmojiClick = (emojidata) => {
+   setMessage(prev=>prev+emojidata.emoji)
+   
+  };
   return (
-    <div className="flex h-screen">
+    <div className="flex flex-col sm:flex-row h-screen">
+      
       <div
-        className={` ${
-          visible ? "hidden" : "w-full"
-        } sm:w-[40%] flex flex-col border-r border-gray-300`}
+        className={`${
+          visible ? "hidden" : "flex"
+        } sm:flex flex-col sm:w-[40%] border-r border-gray-300 h-full`}
       >
         <div className="p-4 flex flex-col items-center gap-4">
           <div className="h-10 flex items-center justify-center w-full font-semibold">
@@ -105,54 +112,74 @@ function Messages() {
         <div className="flex-1 overflow-y-auto px-4 scrollbar-hide">
           <div className="flex flex-col gap-4 mt-4">
             {followingUser.map((user, index) => (
-              <div key={index} className="flex items-center gap-2">
+              <div
+                key={index}
+                className="flex items-center gap-2 cursor-pointer"
+                onClick={() => {
+                  setVisible(true);
+                  setReceiver(user._id);
+                }}
+              >
                 <img
                   className="w-8 h-8 rounded-full"
                   src={user.profilePicture}
                   alt="user avatar"
                 />
-                <p
-                  onClick={() => {
-                    setVisible(true);
-                    setReceiver(user._id);
-                  }}
-                >
-                  {user.name}
-                </p>
+                <p>{user.name}</p>
               </div>
             ))}
           </div>
         </div>
       </div>
 
+      
       <div
-        className={` ${
-          visible ? "w-full" : "hidden"
-        } h-[90%] flex sm:block sm:w-[60%] p-4 overflow-y-auto scrollbar-hide`}
+        className={`${
+          visible ? "flex" : "hidden"
+        } sm:flex flex-col sm:w-[60%] h-full relative`}
       >
-        <div className="flex-1 overflow-y-auto scrollbar-hide">
+        
+        <div className="sm:hidden p-2">
+          <button
+            className="text-blue-500 font-semibold"
+            onClick={() => setVisible(false)}
+          >
+            ← Back
+          </button>
+        </div>
+
+        
+        <div className="flex-1 overflow-y-auto px-4 py-2 scrollbar-hide">
           {messages &&
             messages.map((msg, index) => (
-              <p key={index}>
-                {" "}
-                <b>{msg.sender === user._id ? "You" : "Them"}:</b> {msg.message}
+              <p key={index} className="mb-2">
+                <b>{msg.sender === user._id ? "You" : "Them"}:</b>{" "}
+                {msg.message}
               </p>
             ))}
         </div>
 
-        {/* Sticky input box at the bottom */}
-        <div className="sticky flex  gap-2 w-full bottom-0 bg-white mt-2">
+        
+        <div className="sticky bottom-0 w-full bg-white p-2 flex items-center gap-2 border-t border-gray-300">
           <input
             onChange={(e) => setMessage(e.target.value)}
             type="text"
             value={message}
-            className="w-full border border-gray-400 p-2 rounded"
+            className="flex-1 border border-gray-400 p-2 rounded"
             placeholder="Type something..."
           />
-          <button onClick={() => setShowEmojiPicker((prev) => !prev)}>
-            😊
-          </button>
 
+          <div className="relative">
+            <button onClick={() => setShowEmojiPicker((prev) => !prev)}>
+              😊
+            </button>
+            {showEmojiPicker && (
+              <div className="absolute bottom-full   right-0 z-50 h-[300px] max-h-[400px] overflow-y-auto bg-white border rounded shadow">
+                <EmojiPicker onEmojiClick={handleEmojiClick} />
+              </div>
+            )}
+          </div>
+ 
           <img
             onClick={sendMessage}
             className="w-10 h-10 cursor-pointer"
@@ -160,11 +187,6 @@ function Messages() {
             alt="Send"
           />
         </div>
-        {showEmojiPicker && (
-          <div className="mt-2 z-50">
-            <EmojiPicker onEmojiClick={handleEmojiClick} />
-          </div>
-        )}
       </div>
     </div>
   );
