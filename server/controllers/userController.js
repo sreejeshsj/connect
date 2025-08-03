@@ -241,7 +241,20 @@ const getAllfollowingUser = async (req, res) => {
     });
   }
 };
-
+const getAllUser=async(req,res)=>{
+  try {
+    const users=await UserModel.find()
+    res.json({
+      success:true,
+      users
+    })
+  } catch (error) {
+    res.json({
+      success: false,
+      message: error.message || "Something went wrong",
+    });
+  }
+}
 export {
   register,
   login,
@@ -251,4 +264,5 @@ export {
   follow,
   unFollow,
   getAllfollowingUser,
+  getAllUser
 };

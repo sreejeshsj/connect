@@ -12,11 +12,15 @@ function SearchFeed() {
     navigate,
     fetchUserDetails,
     loggedInUser,
+    fetchAllUser,
+    users
+
   } = useContext(AppContext);
   const [search, setSearch] = useState("");
   const [filteredPost, setFilteredPost] = useState([]);
   const [searchActive, setSerachActive] = useState(false);
   const [posts, setPosts] = useState([]);
+  
   const handleAllPost = async () => {
     try {
       const response = await axios.get(`${backendUrl}/api/post/fetch-all`, {
@@ -29,17 +33,19 @@ function SearchFeed() {
       console.log("Error");
     }
   };
+  
 
+  useEffect(()=>{
+    fetchAllUser()
+  },[token])
   const searchHandler = () => {
     if(search.trim()){
-      const filtered = posts.filter((post) =>
-      post.userId.name.toLowerCase().includes(search.toLowerCase())
+      const filtered = users.filter((user) =>
+     user.name.toLowerCase().includes(search.toLowerCase())
     );
-    const uniqueFiltered = Array.from(
-      new Map(filtered.map((post) => [post.userId._id, post])).values()
-    );
+   
     
-    setFilteredPost(uniqueFiltered);
+    setFilteredPost(filtered);
     setSearch("")
     }
     
@@ -85,10 +91,10 @@ function SearchFeed() {
             <div
               key={index}
               onClick={() => {
-                if (data.userId._id === loggedInUser) {
+                if (data._id === loggedInUser) {
                   navigate("/profile");
                 } else {
-                  localStorage.setItem("selectedUserId", data.userId._id);
+                  localStorage.setItem("selectedUserId", data._id);
                   navigate("/user-profile");
                 }
               }}
@@ -96,11 +102,11 @@ function SearchFeed() {
             >
               <img
                 className="w-14 h-14 border rounded-full"
-                src={data.userId.profilePicture}
+                src={data.profilePicture}
                 alt=""
               />
               <p className="font-bold text-gray-500 text-1.5xl">
-                {data.userId.name}
+                {data.name}
               </p>
             </div>
           ))

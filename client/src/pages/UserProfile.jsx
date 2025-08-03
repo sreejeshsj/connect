@@ -12,6 +12,8 @@ function UserProfile() {
     getUserDetails,
     userDetails,
     fetchUserDetails,
+    users,
+    fetchAllUser
   } = useContext(AppContext);
 
   const [userProfile, setUserProfile] = useState(null);
@@ -21,23 +23,26 @@ function UserProfile() {
     const userId = localStorage.getItem("selectedUserId");
     if (userId) {
       fetchUserDetails(userId);
+      console.log(userId)
     }
   }, []);
   useEffect(() => {
     if (token) {
       fetchUserDetails(userId);
       getUserDetails();
+      fetchAllUser()
     }
   }, [token, userId]);
 
   useEffect(() => {
-    if (userDetails.length > 0) {
-      setUserProfile(userDetails[0]);
-    }
-  }, [userDetails]);
+    const profile=users.find((user)=>user._id===localStorage.getItem("selectedUserId"))
+    console.log(users)
+    console.log(userId)
+    setUserProfile(profile)
+  }, [users]);
 
   const handleFollowCheck = () => {
-    if (user.following.includes(userProfile?.userId?._id)) {
+    if (user.following.includes(userProfile?._id)) {
       return setFollowCheck(true);
     }
     return setFollowCheck(false);
@@ -51,6 +56,7 @@ function UserProfile() {
       );
       if (response.data.success) {
         fetchUserDetails(localStorage.getItem("selectedUserId"));
+        fetchAllUser()
         getUserDetails();
         handleFollowCheck();
       }
@@ -67,6 +73,7 @@ function UserProfile() {
       );
       if (response.data.success) {
         fetchUserDetails(localStorage.getItem("selectedUserId"));
+         fetchAllUser()
         getUserDetails();
         handleFollowCheck();
       }
@@ -89,7 +96,7 @@ function UserProfile() {
           <div className="flex justify-center w-full md:w-auto">
             <img
               className="w-24 h-24 md:w-28 md:h-28 rounded-full"
-              src={userProfile.userId.profilePicture}
+              src={userProfile.profilePicture}
               alt="Profile"
             />
           </div>
@@ -97,17 +104,17 @@ function UserProfile() {
           {/* User Info */}
           <div className="flex flex-col w-full text-center md:text-left">
             <div className="flex flex-col sm:flex-row gap-2 justify-center md:justify-start items-center">
-              <p className="text-lg font-bold">{userProfile?.userId?.name}</p>
+              <p className="text-lg font-bold">{userProfile?.name}</p>
               <div className="flex gap-2">
                 <button className="text-white bg-blue-600 px-4 py-1 rounded-lg">
                   {followCheck ? (
                     <p
-                      onClick={() => unFollowHandler(userProfile?.userId?._id)}
+                      onClick={() => unFollowHandler(userProfile?._id)}
                     >
                       Unfollow
                     </p>
                   ) : (
-                    <p onClick={() => followHandler(userProfile?.userId?._id)}>
+                    <p onClick={() => followHandler(userProfile?._id)}>
                       Follow
                     </p>
                   )}
@@ -120,11 +127,11 @@ function UserProfile() {
 
             <div className="flex justify-center md:justify-start gap-4 mt-4 text-sm font-semibold">
               <p>Posts {userDetails?.length}</p>
-              <p>Followers {userProfile?.userId?.followers?.length || 0}</p>
-              <p>Following {userProfile?.userId?.following?.length || 0}</p>
+              <p>Followers {userProfile?.followers?.length || 0}</p>
+              <p>Following {userProfile?.following?.length || 0}</p>
             </div>
 
-            <div className="mt-3 text-sm">{userProfile.userId.bio}</div>
+            <div className="mt-3 text-sm">{userProfile.bio}</div>
           </div>
         </div>
       )}

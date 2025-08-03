@@ -12,6 +12,7 @@ export const AppContextProvider = (props) => {
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
   const [token, setToken] = useState(localStorage.getItem("token"));
   const [fetchedPost, setFetchedPost] = useState([]);
+  const [users,setUsers] = useState([])
   const navigate = useNavigate();
   const [loggedInUser, setLoggedInUser] = useState(
     localStorage.getItem("loggedInUserId")
@@ -106,7 +107,16 @@ export const AppContextProvider = (props) => {
       console.log("error");
     }
   };
-
+const fetchAllUser = async ()=>{
+    try {
+      const response = await axios.get(`${backendUrl}/api/user/get-all-users`,{headers:{token}})
+      if(response.data.success){
+        setUsers(response.data.users)
+      }
+    } catch (error) {
+      console.log("error")
+    }
+  }
   const value = {
     backendUrl,
     navigate,
@@ -128,7 +138,8 @@ export const AppContextProvider = (props) => {
     followingUser,
     setFollowingUser,
     handleEmojiClick,
-
+    fetchAllUser,
+    users,setUsers,
     showEmojiPicker,
     setShowEmojiPicker,
     message,

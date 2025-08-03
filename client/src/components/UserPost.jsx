@@ -33,10 +33,7 @@ function UserPost(props) {
       console.log(error.message);
     }
   };
-useEffect(() => {
-  console.log("userId from props:", props.userId);
-  console.log("loggedInUser from context:", loggedInUser);
-}, [props.userId, loggedInUser]);
+
   return (
     <div className="relative group w-full sm:w-[300px] h-[300px] sm:h-[300px] overflow-hidden rounded-xl bg-white shadow-md cursor-pointer">
       {/* Post Image */}
