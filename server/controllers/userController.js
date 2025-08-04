@@ -219,7 +219,7 @@ const unFollow = async (req, res) => {
   }
 };
 
-//get all following users
+//get all following users of logged in user
 const getAllfollowingUser = async (req, res) => {
   try {
     const user = await UserModel.findById(req.userId);
@@ -241,6 +241,8 @@ const getAllfollowingUser = async (req, res) => {
     });
   }
 };
+
+//get all following user of any user
 const getAllFollowers=async (req,res)=>{
   try {
     const {userId}=req.body
@@ -260,6 +262,29 @@ const getAllFollowers=async (req,res)=>{
     });
   }
 }
+
+const getAllfollowing = async (req, res) => {
+  try {
+    const {userId}=req.body
+    const user = await UserModel.findById(userId);
+    const followingList = user.following;
+
+    const followingUserlist = await UserModel.find({
+      _id: {
+        $in: followingList,
+      },
+    });
+    res.json({
+      success: true,
+      followingUserlist,
+    });
+  } catch (error) {
+    res.json({
+      success: false,
+      message: error.message || "Something went wrong",
+    });
+  }
+};
 const getAllUser=async(req,res)=>{
   try {
     const users=await UserModel.find()
@@ -284,5 +309,6 @@ export {
   unFollow,
   getAllfollowingUser,
   getAllUser,
-  getAllFollowers
+  getAllFollowers,
+ getAllfollowing
 };

@@ -23,6 +23,7 @@ function Profile() {
     followingActive,setFollowingActive,
     followers,
     followingUser,
+    getAllFollowing,following
   } = useContext(AppContext);
   const [posts, setPosts] = useState([]);
 
@@ -79,7 +80,7 @@ function Profile() {
               </p>
               <p onClick={()=>{
                 setFollowingActive(true)
-                getAlFollowingUser()
+                getAllFollowing(user?._id)
               }} className="m-2 mt-5 font-bold cursor-pointer">
                 Following {user.following?.length || 0}
               </p>
@@ -118,7 +119,7 @@ function Profile() {
       }
       {
         followingActive && (
-          <FollowList  title="Following" list={followingUser} setActive={setFollowingActive} />
+          <FollowList  title="Following" list={following} setActive={setFollowingActive} />
         )
       }
     </div>

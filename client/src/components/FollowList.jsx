@@ -2,12 +2,25 @@ import React from 'react'
 import { useContext } from 'react'
 import { AppContext } from '../context/AppContext'
 import { useState } from 'react'
+import { useEffect } from 'react'
 
 
 function FollowList({title,list,setActive}) {
+const [search , setSearch] = useState('')
+const [data,setData]=useState([])
+useEffect(()=>{
+    setData(list)
+},[list])
+useEffect(()=>{
+ if(search.trim()){
+    const filtered=list.filter((user)=>user.name.toLowerCase().includes(search.toLowerCase()))
+    setData(filtered)
+ }else{
     
-    
-
+    setData(list)
+ }
+ 
+},[search,list])
 
   return (
     <div className='absolute right-0 left-0 bottom-0 top-0 backdrop-blur-sm bg-black/30 flex justify-center items-center '>
@@ -17,6 +30,7 @@ function FollowList({title,list,setActive}) {
   
   <div className='h-[50px] w-full flex justify-center items-center'>
     <input
+      onChange={(e)=>setSearch(e.target.value)}
       className='border shadow border-gray-400 outline-none rounded-lg w-[80%] h-[40px] text-center'
       type="text"
       placeholder='search'
@@ -24,7 +38,7 @@ function FollowList({title,list,setActive}) {
   </div>
 
   <div className='flex flex-col items-center gap-4 mx-5 mt-2 mb-5 overflow-y-auto scroll-smooth h-[270px]'>
-    {list.length > 0 ? list.map((user, index) => (
+    {data.length > 0 ? data.map((user, index) => (
       <div key={index} className='flex gap-2 shadow p-2 w-full rounded'>
         <img className='w-6 h-6 rounded-full' src={user.profilePicture} alt="" />
         <p className='font-bold'>{user.name}</p>

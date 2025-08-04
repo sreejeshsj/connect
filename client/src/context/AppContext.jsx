@@ -77,6 +77,16 @@ export const AppContextProvider = (props) => {
       console.log("Error")
     }
   }
+  const getAllFollowing = async (userId)=>{
+    try {
+      const response = await axios.post(`${backendUrl}/api/user/get-following`,{userId},{headers:{token}})
+      if(response.data.success){
+        setFollowing(response.data.followingUserlist)
+      }
+    } catch (error) {
+      console.log("Error")
+    }
+  }
   const fetchPost = async () => {
     try {
       const response = await axios.get(`${backendUrl}/api/post/fetch`, {
@@ -186,7 +196,9 @@ const fetchAllUser = async ()=>{
     followersActive,setFollowersActive,
     followingActive,setFollowingActive,
     followers,setFollowers,
-    followingUser, setFollowingUser
+    getAllFollowing,following
+    
+   
   };
 
   return (
