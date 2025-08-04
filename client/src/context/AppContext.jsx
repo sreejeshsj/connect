@@ -14,7 +14,12 @@ export const AppContextProvider = (props) => {
   const [token, setToken] = useState(localStorage.getItem("token"));
   const [fetchedPost, setFetchedPost] = useState([]);
   const [users,setUsers] = useState([])
+  const [followersActive,setFollowersActive] = useState(false)
+  const [followingActive,setFollowingActive] = useState(false)
+  const [followers,setFollowers] = useState([])
+  const [following,setFollowing] = useState([])
   const navigate = useNavigate();
+  
   const [loggedInUser, setLoggedInUser] = useState(
     localStorage.getItem("loggedInUserId")
   );
@@ -61,6 +66,17 @@ export const AppContextProvider = (props) => {
       console.log("error");
     }
   };
+
+  const getAllFollowers = async (userId)=>{
+    try {
+      const response = await axios.post(`${backendUrl}/api/user/get-followers`,{userId},{headers:{token}})
+      if(response.data.success){
+        setFollowers(response.data.followerUserList)
+      }
+    } catch (error) {
+      console.log("Error")
+    }
+  }
   const fetchPost = async () => {
     try {
       const response = await axios.get(`${backendUrl}/api/post/fetch`, {
@@ -165,7 +181,12 @@ const fetchAllUser = async ()=>{
     setPostDetails,
     loggedInUser,
     setLoggedInUser,
-    filter,setFilter,filterPost
+    filter,setFilter,filterPost,
+    getAllFollowers,
+    followersActive,setFollowersActive,
+    followingActive,setFollowingActive,
+    followers,setFollowers,
+    followingUser, setFollowingUser
   };
 
   return (

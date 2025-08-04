@@ -41,7 +41,7 @@ function EditPost() {
   }, [postDetails.caption]);
 
   return (
-    <div className="absolute inset-0 backdrop-blur-sm bg-black/30 flex justify-center items-center px-4 z-50">
+    <div className="absolute  backdrop-blur-sm bg-black/30 flex justify-center items-center px-4 z-50">
       <form
         onSubmit={handleSubmit}
         className="relative bg-white p-4 sm:p-8 rounded-xl text-slate-500 flex flex-col sm:flex-row items-center gap-4 w-full max-w-3xl"

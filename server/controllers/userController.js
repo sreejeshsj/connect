@@ -241,6 +241,25 @@ const getAllfollowingUser = async (req, res) => {
     });
   }
 };
+const getAllFollowers=async (req,res)=>{
+  try {
+    const {userId}=req.body
+    const user=await UserModel.findById(userId)
+    const followerList=user.followers
+    const followerUserList=await UserModel.find({_id:{
+      $in:followerList
+    }})
+    res.json({
+      success:true,
+      followerUserList
+    })
+  } catch (error) {
+    res.json({
+      success: false,
+      message: error.message || "Something went wrong",
+    });
+  }
+}
 const getAllUser=async(req,res)=>{
   try {
     const users=await UserModel.find()
@@ -264,5 +283,6 @@ export {
   follow,
   unFollow,
   getAllfollowingUser,
-  getAllUser
+  getAllUser,
+  getAllFollowers
 };

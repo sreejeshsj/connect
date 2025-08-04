@@ -3,7 +3,7 @@ import axios from 'axios'
 import { AppContext } from '../context/AppContext'
 import assets from '../assets/assets'
 
-function EditProfilePic() {
+function EditProfilePic(props) {
   const { setShowProfilePicEdit, backendUrl, token, navigate, getUserDetails } = useContext(AppContext)
 const [image, setImage] = useState(false);
 
@@ -40,7 +40,7 @@ const [image, setImage] = useState(false);
           <label >
             <img
               className='w-24 h-24 object-cover rounded-full hover:opacity-80 cursor-pointer'
-              src={image ? URL.createObjectURL(image) : assets.upload_icon}
+              src={image ? URL.createObjectURL(image) : props.image ? props.image : assets.upload_icon}
               alt=""
             />
             <input

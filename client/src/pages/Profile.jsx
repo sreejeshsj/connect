@@ -4,6 +4,8 @@ import axios from "axios";
 import UserPost from "../components/UserPost";
 import EditProfilePic from "../components/EditProfilePic";
 import EditPost from "../components/EditPost";
+import FollowList from "../components/followList";
+
 
 function Profile() {
   const {
@@ -16,7 +18,11 @@ function Profile() {
     setShowProfilePicEdit,
     showProfilePicEdit,
     showPostEdit,setShowPostEdit,
-    
+    getAllFollowers,
+    followersActive,setFollowersActive,
+    followingActive,setFollowingActive,
+    followers,
+    followingUser,
   } = useContext(AppContext);
   const [posts, setPosts] = useState([]);
 
@@ -41,9 +47,7 @@ function Profile() {
       getAlFollowingUser();
     }
   }, [token,showPostEdit,posts]);
- useEffect(()=>{
-  console.log(user._id)
- },[user])
+ 
 
   return (
     <div className="flex flex-col items-center justify-center w-full gap-4">
@@ -52,7 +56,7 @@ function Profile() {
           <div>
            {
             user.profilePicture && <img
-              className="w-28 h-28 rounded-full m-2"
+              className="w-28 h-28 rounded-full m-2 cursor-pointer"
               src={user.profilePicture}
               onClick={()=>setShowProfilePicEdit(true)}
             />
@@ -67,10 +71,16 @@ function Profile() {
             </div>
             <div className="flex gap-2 justify-end ">
               <p className="m-2 mt-5 font-bold">Posts {posts?.length}</p>
-              <p className="m-2 mt-5 font-bold">
+              <p onClick={()=>{
+                setFollowersActive(true)
+                getAllFollowers(user._id)
+                }} className="m-2 mt-5 font-bold cursor-pointer">
                 Followers {user.followers?.length || 0}
               </p>
-              <p className="m-2 mt-5 font-bold">
+              <p onClick={()=>{
+                setFollowingActive(true)
+                getAlFollowingUser()
+              }} className="m-2 mt-5 font-bold cursor-pointer">
                 Following {user.following?.length || 0}
               </p>
             </div>
@@ -89,7 +99,7 @@ function Profile() {
       </div>
       {showProfilePicEdit && (
         <div className="absolute top-0 left-0 right-0 bottom-0 z-10">
-          <EditProfilePic />
+          <EditProfilePic image={user.profilePicture} />
         </div>
       )}
 
@@ -99,6 +109,17 @@ function Profile() {
           <EditPost />
         </div>
       )
+      }
+
+      {
+        followersActive && (
+          <FollowList  title="Followers" list={followers}  setActive={setFollowersActive}/>
+        )
+      }
+      {
+        followingActive && (
+          <FollowList  title="Following" list={followingUser} setActive={setFollowingActive} />
+        )
       }
     </div>
   );
