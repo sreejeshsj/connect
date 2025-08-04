@@ -13,20 +13,20 @@ function Comment() {
     token,
     image,
     setImage,
-    
-    
-    
-    liked,
-   
+    fetchedPost,
+    filter,
+    fetchPost,
+    filterPost
   } = useContext(AppContext);
-  const [comment, setComment]=useState('')
+  const [comment, setComment] = useState("");
   const [comments, setComments] = useState([]);
-  const [showEmojiPicker, setShowEmojiPicker] = useState(false)
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   useEffect(() => {
-    if (!postId) {
-      setPostId(localStorage.getItem("postId"));
-    }
-  }, [postId]);
+   
+    setPostId(localStorage.getItem("postId"));
+    fetchPost()
+    
+  }, [token]);
   const getComments = async () => {
     try {
       const response = await axios.post(
@@ -36,7 +36,7 @@ function Comment() {
       );
       if (response.data.success) {
         setComments(response.data.comment);
-        console.log(response.data.comment);
+        
       }
     } catch (error) {
       console.log("error");
@@ -64,80 +64,93 @@ function Comment() {
     }
   }, [token, postId]);
 
-  useEffect(() => {
-    if (!image) {
-      setImage(localStorage.getItem("image"));
-    }
-  }, [image]);
+  
   const handleEmojiClick = (emojidata) => {
     setComment((prev) => prev + emojidata.emoji);
-   
   };
+  useEffect(()=>{
+    if(postId){
+      
+      filterPost(postId)
+    }
+    
+  },[postId,fetchedPost])
+  
+  
   return (
-    <div className="flex flex-col sm:flex-row w-full min-h-screen">
-      <div className="w-full sm:w-full p-4 sm:sticky sm:top-4 h-fit bg-white">
-        {image && (
-          <PostCard
-            image={image}
-            liked={liked}
-            postId={postId}
-            dp={localStorage.getItem('db')}
-          />
-        )}
-      </div>
-
-      <div className="w-full mb-10 sm:w-2/3 p-4 mt-10 flex flex-col gap-4">
-        {comments.length > 0 ? (
-          comments.map((comment) => (
-            <div
-              key={comment._id}
-              className="flex flex-col px-4 py-3 bg-white rounded-lg shadow w-full"
-            >
-              <div className="flex items-center gap-2 mb-2">
-                <img
-                  className="w-6 h-6 rounded-full"
-                  src={comment.userId.profilePicture}
-                  alt=""
-                />
-                <p className="font-semibold">{comment.userId.name}</p>
-              </div>
-              <p className="text-sm text-gray-700">{comment.comment}</p>
-            </div>
-          ))
-        ) : (
-          <p className="text-gray-500">No comments yet.</p>
-        )}
-
-        <div className="flex flex-col m-5">
-          <div className="flex items-center gap-2">
-            <input
-              className="px-5 py-2 border rounded-lg outline-none w-full"
-              type="text"
-              placeholder="Comment Here"
-              value={comment}
-              onChange={(e) => setComment(e.target.value)}
-            />
-
-            <button onClick={() => setShowEmojiPicker((prev) => !prev)}>
-              😊
-            </button>
-
+ <div className="flex flex-col items-center justify-center lg:flex-row w-full min-h-screen gap-4 p-4 bg-gray-50">
+  {/* PostCard Section */}
+  <div className="w-full lg:w-1/3">
+    {filter && (
+      <PostCard
+        image={filter?.image}
+        liked={filter?.like}
+        postId={filter?._id}
+        dp={localStorage.getItem("dp")}
+        like={filter?.like?.length}
+        name={filter?.userId?.name}
+      />
+    )}
+  </div>
+ <div className="flex flex-col w-full lg:w-[25%] max-h-screen overflow-hidden">
+  {/* Scrollable Comments List */}
+  <div className="flex-1 overflow-y-auto pr-2 scroll-smooth scrollbar-hide">
+    {comments.length > 0 ? (
+      comments.map((comment) => (
+        <div
+          key={comment._id}
+          className="flex flex-col w-full px-4 py-3 bg-white rounded-lg shadow mb-2"
+        >
+          <div className="flex items-center gap-2 mb-2">
             <img
-              onClick={addComment}
-              className="w-5 h-5 cursor-pointer"
-              src={assets.send_icon}
-              alt="Send"
+              className="w-6 h-6 rounded-full"
+              src={comment.userId.profilePicture}
+              alt="User"
             />
+            <p className="font-semibold">{comment.userId.name}</p>
           </div>
-
-          {showEmojiPicker && (
-            <div className="flex justify-center    z-50 max-h-[350px]">
-              <EmojiPicker onEmojiClick={handleEmojiClick} />
-            </div>
-          )}
+          <p className="text-sm text-gray-700">{comment.comment}</p>
         </div>
-      </div>
+      ))
+    ) : (
+      <p className="text-gray-500 text-center">No comments yet.</p>
+    )}
+  </div>
+
+  {/* Sticky Comment Input */}
+  <div className="bg-white w-full p-4 rounded-lg shadow">
+    <div className="flex items-center gap-2">
+      <input
+        className="px-4 py-2 border rounded-lg outline-none flex-1"
+        type="text"
+        placeholder="Comment here..."
+        value={comment}
+        onChange={(e) => setComment(e.target.value)}
+      />
+      <button
+        onClick={() => setShowEmojiPicker((prev) => !prev)}
+        className="text-xl"
+      >
+        😊
+      </button>
+      <img
+        onClick={addComment}
+        className="w-6 h-6 cursor-pointer"
+        src={assets.send_icon}
+        alt="Send"
+      />
     </div>
+
+    {showEmojiPicker && (
+      <div className="z-50 mt-2">
+        <EmojiPicker onEmojiClick={handleEmojiClick} />
+      </div>
+    )}
+  </div>
+</div>
+  
+</div>
+
   );
 }
 

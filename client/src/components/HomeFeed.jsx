@@ -15,9 +15,11 @@ function HomeFeed() {
 
   return (
     <div className="flex flex-col justify-center items-center">
+      
       {fetchedPost.length > 0
         ? fetchedPost.map((post, index) => (
             <PostCard
+              
               userId={post.userId._id}
               key={index}
               postId={post._id}

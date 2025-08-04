@@ -11,12 +11,11 @@ function PostCard(props) {
     likeHandler,
     getUserDetails,
     token,
-    setLiked,
-    liked,
+    filterPost
     
   } = useContext(AppContext);
   const [like ,setLike]=useState(false)
-
+  
   const commentHandler=(image,postId,liked,dp)=>{
     setImage(image)
     setPostId(postId)
@@ -27,6 +26,7 @@ function PostCard(props) {
     localStorage.setItem('liked',JSON.stringify(liked))
     localStorage.setItem('dp',dp)
   }
+  
   useEffect(()=>{
       getUserDetails()
   },[token])
@@ -42,7 +42,9 @@ function PostCard(props) {
  
   return (
     <div className="bg-white rounded-lg shadow mb-6 w-full max-w-md mx-auto">
+     
       <div className="flex mt-5 mb-5 ">
+        
         <img
           onClick={() => {
             localStorage.setItem("selectedUserId", props.userId);
@@ -64,6 +66,7 @@ function PostCard(props) {
         />
         <MessageCircle
           onClick={() => {
+            filterPost(props.postId)
             commentHandler(props.image,props.postId,props.liked,props.dp)
             navigate("/comment");
             

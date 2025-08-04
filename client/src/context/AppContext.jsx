@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 export const AppContext = createContext();
 
 export const AppContextProvider = (props) => {
+  const [filter,setFilter]=useState(false)
   const [userId, setUserId] = useState("");
   const [likedPosts, setLikedPosts] = useState({});
   const [followingUser, setFollowingUser] = useState([]);
@@ -73,6 +74,7 @@ export const AppContextProvider = (props) => {
     }
   };
   const likeHandler = async (postId) => {
+    
     try {
       const response = await axios.post(
         `${backendUrl}/api/post/likeToggle/${postId}`,
@@ -107,6 +109,8 @@ export const AppContextProvider = (props) => {
       console.log("error");
     }
   };
+
+  
 const fetchAllUser = async ()=>{
     try {
       const response = await axios.get(`${backendUrl}/api/user/get-all-users`,{headers:{token}})
@@ -116,6 +120,10 @@ const fetchAllUser = async ()=>{
     } catch (error) {
       console.log("error")
     }
+  }
+   const filterPost=(postId)=>{
+    const filtered=fetchedPost.find((post)=>post._id===postId)
+    setFilter(filtered)
   }
   const value = {
     backendUrl,
@@ -157,6 +165,7 @@ const fetchAllUser = async ()=>{
     setPostDetails,
     loggedInUser,
     setLoggedInUser,
+    filter,setFilter,filterPost
   };
 
   return (
